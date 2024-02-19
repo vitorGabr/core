@@ -27,8 +27,8 @@ const {
         getScopedI18n
     }
 } = createI18n({
-		"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
-	});
+	"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
+});
 ```
 
 Após criar a instância do objeto `i18n`, você pode usar os métodos `t()` e `scopedT()` para traduzir texto em seu aplicativo:
