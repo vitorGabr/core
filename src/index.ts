@@ -1,2 +1,3 @@
-export * from "./functions";
-export * from "./create";
+import { createI18n } from "./create";
+
+export { createI18n };
