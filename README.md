@@ -52,17 +52,25 @@ Aqui está um exemplo básico de como você pode usar o Lingo-TS em um aplicativ
 import React from 'react';
 import { createI18n } from 'lingo-ts';
 
-const i18n = createI18n({
-  // Configurações de idioma aqui
+const {
+    client: {
+        useI18n,
+        useScopedI18n
+    }
+} = createI18n({
+	"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
 });
 
 const App: React.FC = () => {
-  return (
-    <div>
-      <h1>{i18n.t('Welcome')}</h1>
-      <p>{i18n.t('This is a simple example of Lingo-TS usage')}</p>
-    </div>
-  );
+    const t = useI18n();
+    const scopedT = useScopedI18n('myScope');
+
+    return (
+        <div>
+            <h1>{t('Welcome')}</h1>
+            <p>{scopedT('This is a simple example of Lingo-TS usage')}</p>
+        </div>
+    );
 };
 
 export default App;
