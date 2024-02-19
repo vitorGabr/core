@@ -1,4 +1,3 @@
-import { match } from "ts-pattern";
 import type {
 	DeepKeyStringUnion,
 	DeepKeyUnion,
