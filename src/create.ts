@@ -4,11 +4,14 @@ import {
 	retrieveScopeValueAtPath,
 } from "./functions";
 import type { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./types";
+import { atom } from 'jotai';
+
+const localeAtom = atom('pt-BR');
 
 export const createI18n = <T extends Record<string, unknown>>(locales: {
 	[key: string]: () => Promise<T>;
 }) => {
-	const locale = locales["pt-BR"];
+	const locale = locales[localeAtom.init];
 
 	return {
 		client: {
@@ -21,6 +24,7 @@ export const createI18n = <T extends Record<string, unknown>>(locales: {
 				}, []);
 
 				return (key: DeepKeyStringUnion<Awaited<T>>) => {
+					if (!l) return "";
 					return retrieveValueAtPath({
 						obj: l as Awaited<T>,
 						path: key,
