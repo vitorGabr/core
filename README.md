@@ -31,7 +31,7 @@ const {
 });
 ```
 
-Após criar a instância do objeto `i18n`, você pode usar os métodos `t()` e `scopedT()` para traduzir texto em seu aplicativo:
+Após criar a instância do objeto `server/client`, você pode usar os métodos `t()` e `scopedT()` para traduzir texto em seu aplicativo:
 
 ```typescript
 // Tradução de texto simples
