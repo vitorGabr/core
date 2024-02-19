@@ -1,4 +1,4 @@
-import { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./types";
+import type { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./types";
 
 function flatten<T extends Record<string, unknown>>(obj: T, path: string) {
 	const keys = `${path}`.split(".");

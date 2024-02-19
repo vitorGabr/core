@@ -3,7 +3,7 @@ import {
 	retrieveValueAtPath,
 	retrieveScopeValueAtPath,
 } from "./functions";
-import { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./types";
+import type { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./types";
 
 export const createI18n = <T extends Record<string, unknown>>(locales: {
 	[key: string]: () => Promise<T>;
