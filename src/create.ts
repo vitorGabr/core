@@ -8,14 +8,14 @@ import type { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./t
 export const createI18n = <T extends Record<string, unknown>>(locales: {
 	[key: string]: () => Promise<T>;
 }) => {
-	const locale = locales["pt-BR"]();
+	const locale = locales["pt-BR"];
 
 	return {
 		client: {
 			useI18n: () => {
 				const [l, setL] = useState<Awaited<T> | null>(null);
 				useEffect(() => {
-					locale.then((value) => {
+					locale().then((value) => {
 						setL(value as Awaited<T>);
 					});
 				}, []);
@@ -30,7 +30,7 @@ export const createI18n = <T extends Record<string, unknown>>(locales: {
 			useScopedI18n: <DP extends DeepKeyUnion<Awaited<T>>>(scope: DP) => {
 				const [l, setL] = useState<Awaited<T> | null>(null);
 				useEffect(() => {
-					locale.then((value) => {
+					locale().then((value) => {
 						setL(value as Awaited<T>);
 					});
 				}, []);
@@ -46,7 +46,7 @@ export const createI18n = <T extends Record<string, unknown>>(locales: {
 		},
 		server: {
 			getI18n: async () => {
-				const value = await locale;
+				const value = await locale();
 				return (key: DeepKeyStringUnion<typeof value>) => {
 					return retrieveValueAtPath({
 						obj: value,
@@ -55,7 +55,7 @@ export const createI18n = <T extends Record<string, unknown>>(locales: {
 				};
 			},
 			getScopedI18n: async <DP extends DeepKeyUnion<Awaited<T>>>(scope: DP) => {
-				const value = (await locale) as Awaited<T>;
+				const value = (await locale()) as Awaited<T>;
 				return (key: FlattenedValueByPath<Awaited<T>, DP>) => {
 					return retrieveScopeValueAtPath({
 						obj: value,

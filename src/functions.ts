@@ -1,20 +1,21 @@
-import type { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./types";
+import { match } from "ts-pattern";
+import type {
+	DeepKeyStringUnion,
+	DeepKeyUnion,
+	FlattenedValueByPath,
+} from "./types";
 
 function flatten<T extends Record<string, unknown>>(obj: T, path: string) {
 	const keys = `${path}`.split(".");
 	let newObj = obj as T | string;
 	for (const key of keys) {
-		newObj = path;
-		if (typeof newObj !== "string" && newObj[key] !== undefined) {
-			newObj = newObj[key];
+		if (typeof newObj !== "string" && newObj[key]) {
+			newObj = newObj[key] as T;
+		} else {
+			newObj = path;
 		}
 	}
-
-	if (typeof newObj !== "string") {
-		throw new Error("Invalid path");
-	}
-
-	return newObj;
+	return `${newObj}`;
 }
 
 export function retrieveValueAtPath<T extends Record<string, unknown>>({
