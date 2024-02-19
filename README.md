@@ -21,19 +21,27 @@ Para começar a usar o Lingo-TS, você precisa primeiro criar uma instância do 
 ```typescript
 import { createI18n } from 'lingo-ts';
 
-const i18n = createI18n({
-  // Configurações de idioma aqui
-});
+const {
+    server: {
+        getI18n,
+        getScopedI18n
+    }
+} = createI18n({
+		"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
+	});
 ```
 
 Após criar a instância do objeto `i18n`, você pode usar os métodos `t()` e `scopedT()` para traduzir texto em seu aplicativo:
 
 ```typescript
 // Tradução de texto simples
-const translatedText = i18n.t('Hello');
+const t = await getI18n();
+const translatedText = t('Hello');
+
 
 // Tradução de texto com escopo
-const translatedScopedText = i18n.scopedT('Componente', 'Hello');
+const scopedT = await getScopedI18n('myScope');
+const translatedScopedText = scopedT('Hello');
 ```
 
 ## Exemplos
