@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
-import {
-	retrieveValueAtPath,
-	retrieveScopeValueAtPath,
-} from "./functions";
-import type { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "./types";
-import { atom } from 'jotai';
+import { retrieveValueAtPath, retrieveScopeValueAtPath } from "./functions";
+import type {
+	DeepKeyStringUnion,
+	DeepKeyUnion,
+	FlattenedValueByPath,
+} from "./types";
 
-const localeAtom = atom('pt-BR');
+type CreateI18Props<T extends Record<string, unknown>> = Record<
+	string,
+	() => Promise<T>
+>;
 
-export const createI18n = <T extends Record<string, unknown>>(locales: {
-	[key: string]: () => Promise<T>;
-}) => {
-	const locale = locales[localeAtom.init];
+type Options<T extends Record<string, unknown>> = {
+	defaultLocale?: keyof T;
+};
+
+export const createI18n = <T extends Record<string, unknown>>(
+	locales: CreateI18Props<T>,
+	options?: Options<typeof locales>,
+) => {
+	const locale = locales[options?.defaultLocale ?? "pt-BR"];
 
 	return {
 		client: {
