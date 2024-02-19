@@ -1,4 +1,3 @@
-````markdown
 # Lingo-TS
 
 Lingo-TS é uma biblioteca simples de internacionalização (i18n) escrita em TypeScript. Ela fornece suporte tanto para aplicações do lado do servidor quanto do lado do cliente, incluindo projetos React e React Native. A biblioteca é 100% typesafe e oferece métodos convenientes para tradução de texto.
@@ -68,4 +67,3 @@ Contribuições são bem-vindas! Se você deseja contribuir com o projeto, por f
 ## Licença
 
 Este projeto é licenciado sob a [Licença MIT](LICENSE).
-```
