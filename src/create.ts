@@ -5,6 +5,8 @@ import type {
 	DeepKeyUnion,
 	FlattenedValueByPath,
 } from "./types";
+import { useAtom } from "jotai";
+import { localeAtom } from "./atom";
 
 type CreateI18Props<T extends Record<string, unknown>> = Record<
 	string,
@@ -24,12 +26,15 @@ export const createI18n = <T extends Record<string, unknown>>(
 	return {
 		client: {
 			useI18n: () => {
+				const [locale] = useAtom(localeAtom);
 				const [l, setL] = useState<Awaited<T> | null>(null);
+
+				// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 				useEffect(() => {
-					locale().then((value) => {
+					locales[locale ?? options?.defaultLocale ?? 'pt-BR']().then((value) => {
 						setL(value as Awaited<T>);
 					});
-				}, []);
+				}, [locale]);
 
 				return (key: DeepKeyStringUnion<Awaited<T>>) => {
 					if (!l) return "";
@@ -40,12 +45,15 @@ export const createI18n = <T extends Record<string, unknown>>(
 				};
 			},
 			useScopedI18n: <DP extends DeepKeyUnion<Awaited<T>>>(scope: DP) => {
+				const [locale] = useAtom(localeAtom);
 				const [l, setL] = useState<Awaited<T> | null>(null);
+
+				// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 				useEffect(() => {
-					locale().then((value) => {
+					locales[locale ?? options?.defaultLocale ?? 'pt-BR']().then((value) => {
 						setL(value as Awaited<T>);
 					});
-				}, []);
+				}, [locale]);
 
 				return (key: FlattenedValueByPath<Awaited<T>, DP>) => {
 					return retrieveScopeValueAtPath({
@@ -55,6 +63,10 @@ export const createI18n = <T extends Record<string, unknown>>(
 					});
 				};
 			},
+			setLocale: (newLocale: keyof typeof locales) => {
+				const [l, setL] = useAtom(localeAtom);
+				setL(newLocale);
+			}
 		},
 		server: {
 			getI18n: async () => {
@@ -77,5 +89,13 @@ export const createI18n = <T extends Record<string, unknown>>(
 				};
 			},
 		},
+		t: (key: DeepKeyStringUnion<Awaited<T>>) => {
+			return key;
+		},
+		scopedT: <DP extends DeepKeyUnion<Awaited<T>>>(scope: DP) => {
+			return (key: FlattenedValueByPath<Awaited<T>, DP>) => {
+				return `${scope}.${key}`;
+			};
+		}
 	};
 };
