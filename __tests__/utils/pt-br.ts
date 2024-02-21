@@ -5,6 +5,7 @@ export default {
 			default: "Cliente",
 			manager: "Gerente",
 			realtor: "Corretor",
+			test: 'Teste {name} {a}'
 		},
 	},
 } as const;

@@ -2,9 +2,14 @@ import type {
 	DeepKeyStringUnion,
 	DeepKeyUnion,
 	FlattenedValueByPath,
+	NestedValueByPath,
 } from "./types";
 
-function flatten<T extends Record<string, unknown>>(obj: T, path: string) {
+export function flatten<T extends Record<string, unknown>, P extends string>(
+	obj: T,
+	path: P,
+	params: Record<string, string> = {},
+) {
 	const keys = `${path}`.split(".");
 	let newObj = obj as T | string;
 	for (const key of keys) {
@@ -14,17 +19,34 @@ function flatten<T extends Record<string, unknown>>(obj: T, path: string) {
 			newObj = path;
 		}
 	}
-	return `${newObj}`;
+
+	const regex = /{([^}]+)}/g;
+	let match: RegExpExecArray | null = null;
+
+	while ((match = regex.exec(`${newObj}`)) !== null) {
+		console.log(match[0]);
+		newObj = `${newObj}`.replace(
+			match[0],
+			params[match[1]] ? params[match[1]] : match[0],
+		);
+	}
+
+	return `${newObj}` as NestedValueByPath<T, P>;
 }
 
-export function retrieveValueAtPath<T extends Record<string, unknown>>({
+export function retrieveValueAtPath<
+	T extends Record<string, unknown>,
+	P extends DeepKeyStringUnion<T>,
+>({
 	obj,
 	path,
+	params = {},
 }: {
 	obj: T;
-	path: DeepKeyStringUnion<T>;
-}): string {
-	return flatten(obj, path);
+	path: P;
+	params?: Record<string, string>;
+}) {
+	return flatten(obj, path, params);
 }
 
 export function retrieveScopeValueAtPath<
@@ -34,10 +56,12 @@ export function retrieveScopeValueAtPath<
 	obj,
 	scope,
 	path,
+	params = {},
 }: {
 	obj: T;
 	scope?: S;
 	path: FlattenedValueByPath<T, S>;
-}): string {
-	return flatten(obj, `${scope}.${path}`);
+	params?: Record<string, string>;
+}) {
+	return flatten(obj, `${scope}.${path}`, params);
 }

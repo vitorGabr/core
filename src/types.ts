@@ -27,7 +27,7 @@ export type NestedKeysAndValuesUnion<
 
 export type NestedValueByPath<
 	T extends Record<string, unknown>,
-	K extends DeepKeyUnion<T> | DeepKeyStringUnion<T>,
+	K,
 > = K extends `${infer Key}.${infer Rest}`
 	? Key extends keyof T
 		? T[Key] extends Record<string, unknown>
@@ -56,3 +56,16 @@ export type FlattenedValueByPath<
 			? NestedKeysAndValuesUnion<T[K]>
 			: never
 	  : never;
+
+export type StringToArray<S extends string> =
+	S extends `{${infer Key}}${infer Rest}`
+		? [Key, ...StringToArray<Rest>]
+		: S extends `${infer _}${infer Rest}`
+		  ? StringToArray<Rest>
+		  : [];
+
+export type ArrayToObject<T extends string[]> = {
+	[K in T[number]]: string;
+};
+
+export type SpliParameters<S extends string> = ArrayToObject<StringToArray<S>>;
