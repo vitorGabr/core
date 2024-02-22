@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { createI18n } from "../src";
+import { createDefaultI18n } from "../src/create/default";
 
 describe("flatten objects", () => {
-	const { t,scopedT } = createI18n({
+	const { t,scopedT } = createDefaultI18n({
 		"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
 	});
 

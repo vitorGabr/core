@@ -3,35 +3,30 @@ import type {
 	DeepKeyUnion,
 	FlattenedValueByPath,
 	NestedValueByPath,
-} from "./types";
+} from "../types/flatten-types";
 
 export function flatten<T extends Record<string, unknown>, P extends string>(
 	obj: T,
 	path: P,
 	params: Record<string, string> = {},
-) {
+): NestedValueByPath<T, P> {
 	const keys = `${path}`.split(".");
 	let newObj = obj as T | string;
+
 	for (const key of keys) {
 		if (typeof newObj !== "string" && newObj[key]) {
-			newObj = newObj[key] as T;
+			newObj = newObj[key] as T | string;
 		} else {
 			newObj = path;
+			break;
 		}
 	}
 
-	const regex = /{([^}]+)}/g;
-	let match: RegExpExecArray | null = null;
+	newObj = `${newObj}`.replace(/{([^}]+)}/g, (match, p1) =>
+		params[p1] ? params[p1] : match,
+	);
 
-	while ((match = regex.exec(`${newObj}`)) !== null) {
-		console.log(match[0]);
-		newObj = `${newObj}`.replace(
-			match[0],
-			params[match[1]] ? params[match[1]] : match[0],
-		);
-	}
-
-	return `${newObj}` as NestedValueByPath<T, P>;
+	return newObj as NestedValueByPath<T, P>;
 }
 
 export function retrieveValueAtPath<
