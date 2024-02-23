@@ -5,7 +5,12 @@ export default {
 			default: "Cliente",
 			manager: "Gerente",
 			realtor: "Corretor",
-			test: 'Teste {name} {a}'
+			test: 'Teste {name} {a}',
+			nested: {
+				deep: {
+					key: 'Deep key',
+				},
+			}
 		},
 	},
 } as const;

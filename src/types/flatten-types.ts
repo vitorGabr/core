@@ -53,6 +53,7 @@ export type FlattenedValueByPath<
 		: never
 	: K extends keyof T
 	  ? T[K] extends Record<string, unknown>
-			? NestedKeysAndValuesUnion<T[K]>
+			? DeepKeyStringUnion<T[K]>
 			: never
 	  : never;
+
