@@ -1,20 +1,25 @@
 import {
 	retrieveValueAtPath,
 	retrieveScopeValueAtPath,
-} from "../functions/flatten-object";
-import type { CreateI18nProps, CreateI18nOptions } from "../types/create-i18n";
+} from "../functions";
 import type {
+	CreateI18nProps,
+	CreateI18nOptions,
+	StringParameters,
 	DeepKeyStringUnion,
 	DeepKeyUnion,
 	FlattenedValueByPath,
 	NestedValueByPath,
-} from "../types/flatten-types";
-import type { StringParameters } from "../types/string-parameters";
+} from "../types";
 
 export const createServerI18n = <T extends Record<string, unknown>>(
 	locales: CreateI18nProps<T>,
 	options?: CreateI18nOptions<typeof locales>,
 ) => {
+
+	const firtLocale = locales[Object.keys(locales)[0]] as Awaited<T>;
+	type FirstLocale = Awaited<typeof firtLocale>;
+
 	const locale = locales[options?.defaultLocale ?? "pt-BR"];
 
 	return {

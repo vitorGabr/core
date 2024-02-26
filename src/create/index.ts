@@ -1,3 +1,3 @@
-export * from './client';
-export * from './server';
-export * from './default';
+export { createClientI18n } from "./client";
+export { createServerI18n } from "./server";
+export { createDefaultI18n } from "./default";

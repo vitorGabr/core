@@ -2,14 +2,13 @@ import type {
 	DeepKeyStringUnion,
 	DeepKeyUnion,
 	FlattenedValueByPath,
-	NestedValueByPath,
 } from "../types/flatten-types";
 
-export function flatten<T extends Record<string, unknown>, P extends string>(
+function flatten<T extends Record<string, unknown>, P extends string>(
 	obj: T,
 	path: P,
 	params: Record<string, string> = {},
-): NestedValueByPath<T, P> {
+) {
 	const keys = `${path}`.split(".");
 	let newObj = obj as T | string;
 
@@ -26,7 +25,7 @@ export function flatten<T extends Record<string, unknown>, P extends string>(
 		params[p1] ? params[p1] : match,
 	);
 
-	return newObj as NestedValueByPath<T, P>;
+	return newObj as string;
 }
 
 export function retrieveValueAtPath<

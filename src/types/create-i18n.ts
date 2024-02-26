@@ -4,5 +4,9 @@ export type CreateI18nProps<T extends Record<string, unknown>> = Record<
 >;
 
 export type CreateI18nOptions<T extends Record<string, unknown>> = {
-	defaultLocale?: keyof T;
+	defaultLocale: keyof T;
+	storedLocale: {
+		get: () => Promise<string>;
+		set: (locale: string) => Promise<void>;
+	}
 };
