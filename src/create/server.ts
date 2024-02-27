@@ -1,6 +1,7 @@
 import {
 	retrieveValueAtPath,
 	retrieveScopeValueAtPath,
+	getServerLocale,
 } from "../functions";
 import type {
 	CreateI18nProps,
@@ -25,14 +26,12 @@ export const createServerI18n = <T,>(
 			: never
 		: never;
 
-	const locale = locales[options.defaultLocale as keyof typeof locales] as () => Promise<FirstLocale>;
-
 	return {
 		getI18n: async () => {
-			const value = await locale();
+			const value = await getServerLocale(locales, options);
 			return <
-				T extends DeepKeyStringUnion<typeof value>,
-				V extends NestedValueByPath<typeof value, T>,
+				T extends DeepKeyStringUnion<FirstLocale>,
+				V extends NestedValueByPath<FirstLocale, T>,
 				S extends StringParameters<V extends string ? V : "">,
 			>(
 				key: T,
@@ -46,10 +45,10 @@ export const createServerI18n = <T,>(
 			};
 		},
 		getScopedI18n: async <DP extends DeepKeyUnion<FirstLocale>>(scope: DP) => {
-			const value = (await locale()) as FirstLocale;
+			const value = await getServerLocale(locales, options);
 			return <
-				T extends FlattenedValueByPath<typeof value, DP>,
-				V extends NestedValueByPath<typeof value, T>,
+				T extends FlattenedValueByPath<FirstLocale, DP>,
+				V extends NestedValueByPath<FirstLocale, T>,
 				S extends StringParameters<V extends string ? V : "">,
 			>(
 				key: T,
