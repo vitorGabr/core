@@ -1,7 +1,4 @@
-import {
-	retrieveValueAtPath,
-	retrieveScopeValueAtPath,
-} from "../functions";
+import { retrieveValueAtPath, retrieveScopeValueAtPath } from "../functions";
 import { LocaleProvider, useLocale } from "../providers/locale-provider";
 import type {
 	CreateI18nOptions,
@@ -13,14 +10,18 @@ import type {
 	StringParameters,
 } from "../types";
 
-
-export const createClientI18n = <T extends Record<string, unknown>>(
+export const createClientI18n = <T,>(
 	locales: CreateI18nProps<T>,
 	options: CreateI18nOptions<typeof locales>,
 ) => {
-
-	const firtLocale = locales[Object.keys(locales)[0]] as Awaited<T>;
-	type FirstLocale = Awaited<typeof firtLocale>;
+	const firstLocale = Object.keys(locales)[0] as keyof T;
+	type FirstLocale = (typeof locales)[typeof firstLocale] extends () => Promise<
+		infer R
+	>
+		? R extends Record<string, unknown>
+			? R
+			: never
+		: never;
 
 	return {
 		Provider: ({ children }: { children: React.ReactNode }) => {
@@ -69,7 +70,9 @@ export const createClientI18n = <T extends Record<string, unknown>>(
 		},
 		setLocale: (newLocale: keyof typeof locales) => {
 			const { setLocale } = useLocale();
-			setLocale(newLocale);
+			if (newLocale in locales && typeof newLocale === "string") {
+				setLocale(newLocale);
+			}
 		},
 	};
 };

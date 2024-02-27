@@ -1,15 +1,19 @@
 import { describe, expect, test } from "vitest";
 import { createServerI18n } from "../src/create/server";
 
-
 describe("create-i18n-server", () => {
-	const { getI18n,getScopedI18n } = createServerI18n({
-		"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
-	});
+	const { getI18n, getScopedI18n } = createServerI18n(
+		{
+			"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
+		},
+		{
+			defaultLocale: "pt-BR",
+		},
+	);
 
 	test("it translate function work", async () => {
 		const t = await getI18n();
-		const a = t("globals.usert_types.test",{
+		const a = t("globals.usert_types.test", {
 			name: "Teste",
 			a: "Teste",
 		});

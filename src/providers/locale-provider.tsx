@@ -5,7 +5,7 @@ import {
 	useContext,
 	useEffect,
 } from "react";
-import type { CreateI18nOptions, CreateI18nProps } from "../types";
+import type { CreateI18nOptions } from "../types";
 
 type LocaleContextType = {
 	dictionary: Record<string, unknown>;
@@ -19,38 +19,43 @@ const LocaleContext = createContext<LocaleContextType>({
 	setLocale: () => {},
 });
 
-const LocaleProvider = <T extends Record<string, unknown>>({
+const LocaleProvider = <
+	T extends Record<string, () => Promise<Record<string, unknown>>>,
+>({
 	children,
 	locales,
 	options,
 }: {
 	children: ReactNode;
-	locales: CreateI18nProps<T>;
-	options: CreateI18nOptions<typeof locales>;
+	locales: T;
+	options: CreateI18nOptions<T>;
 }) => {
 	const [locale, setLocale] = useState("");
-	const [dictionary, setDictionary] = useState<Awaited<T>>({} as Awaited<T>);
+	const [dictionary, setDictionary] = useState<Record<string, unknown>>(
+		{} as Record<string, unknown>,
+	);
 
-
-    async function getLocale() {
-        let _locale = options.defaultLocale;
-        if(options.storedLocale){
-            _locale = await options.storedLocale.get();
-        }
-        return _locale;
-    }
+	async function getLocale() {
+		let _locale = options.defaultLocale;
+		if (options.storedLocale) {
+			_locale = await options.storedLocale.get();
+		}
+		return _locale as string;
+	}
 
 	useEffect(() => {
-        getLocale().then((value) => {
-            setLocale(value);
-        })
+		getLocale().then((value) => {
+			if (value) {
+				setLocale(value);
+			}
+		});
 	}, []);
 
 	useEffect(() => {
 		if (locale) {
 			options?.storedLocale?.set(locale);
 			locales[locale]().then((value) => {
-				setDictionary(value as Awaited<T>);
+				setDictionary(value as Record<string, unknown>);
 			});
 		}
 	}, [locale]);

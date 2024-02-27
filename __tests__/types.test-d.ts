@@ -1,13 +1,14 @@
 import { describe, expectTypeOf, test } from "vitest";
-import { createServerI18n } from "../src";
+import { createDefaultI18n, createServerI18n } from "../src";
 
 describe("types", () => {
-	const { getI18n,getScopedI18n } = createServerI18n({
-		"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
-	});
+	const { t, scopedT } = createDefaultI18n(
+		{
+			"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
+		},
+	);
 
 	test("it should work", async () => {
-		const t = await getI18n();
 		type Key = Parameters<typeof t>[0];
 		type Function = (k: Key) => string;
 
@@ -17,24 +18,24 @@ describe("types", () => {
 			| "globals.usert_types.manager"
 			| "globals.usert_types.realtor"
 			| "globals.usert_types.test"
-            | "globals.usert_types.nested.deep.key";
+			| "globals.usert_types.nested.deep.key";
 
 		expectTypeOf<Function>().parameters.toEqualTypeOf<[PossibleKeys]>();
 	});
 
-    test("it should work with nested keys", async () => {
-        const t = await getScopedI18n('globals.usert_types');
-        type Key = Parameters<typeof t>[0];
-        type Function = (k: Key) => string;
+	test("it should work with nested keys", async () => {
+		const t = scopedT("globals.usert_types");
+		type Key = Parameters<typeof t>[0];
+		type Function = (k: Key) => string;
 
-        type PossibleKeys =
-            | "admin"
-            | "default"
-            | "manager"
-            | "realtor"
-            | "test"
-            | "nested.deep.key";
+		type PossibleKeys =
+			| "admin"
+			| "default"
+			| "manager"
+			| "realtor"
+			| "test"
+			| "nested.deep.key";
 
-        expectTypeOf<Function>().parameters.toEqualTypeOf<[PossibleKeys]>();
-    })
+		expectTypeOf<Function>().parameters.toEqualTypeOf<[PossibleKeys]>();
+	});
 });

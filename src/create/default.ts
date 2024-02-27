@@ -5,17 +5,25 @@ import type {
 	FlattenedValueByPath,
 } from "../types";
 
-export const createDefaultI18n = <T extends Record<string, unknown>>(
+export const createDefaultI18n = <T,>(
 	locales: CreateI18nProps<T>,
 ) => {
-	const locale = Object.values(locales)[0]() as Awaited<T>;
+	const firstLocale = Object.keys(locales)[0] as keyof T;
+	type FirstLocale = (typeof locales)[typeof firstLocale] extends () => Promise<
+		infer R
+	>
+		? R extends Record<string, unknown>
+			? R
+			: never
+		: never;
+
 
 	return {
-		t: (key: DeepKeyStringUnion<Awaited<typeof locale>>) => {
+		t: (key: DeepKeyStringUnion<FirstLocale>) => {
 			return key;
 		},
-		scopedT: <DP extends DeepKeyUnion<Awaited<typeof locale>>>(scope: DP) => {
-			return (key: FlattenedValueByPath<Awaited<typeof locale>, DP>) => {
+		scopedT: <DP extends DeepKeyUnion<FirstLocale>>(scope: DP) => {
+			return (key: FlattenedValueByPath<FirstLocale, DP>) => {
 				return `${scope}.${key}`;
 			};
 		},

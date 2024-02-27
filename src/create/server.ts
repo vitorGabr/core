@@ -12,15 +12,20 @@ import type {
 	NestedValueByPath,
 } from "../types";
 
-export const createServerI18n = <T extends Record<string, unknown>>(
+export const createServerI18n = <T,>(
 	locales: CreateI18nProps<T>,
-	options?: CreateI18nOptions<typeof locales>,
+	options: CreateI18nOptions<typeof locales>,
 ) => {
+	const firstLocale = Object.keys(locales)[0] as keyof T;
+	type FirstLocale = (typeof locales)[typeof firstLocale] extends () => Promise<
+		infer R
+	>
+		? R extends Record<string, unknown>
+			? R
+			: never
+		: never;
 
-	const firtLocale = locales[Object.keys(locales)[0]] as Awaited<T>;
-	type FirstLocale = Awaited<typeof firtLocale>;
-
-	const locale = locales[options?.defaultLocale ?? "pt-BR"];
+	const locale = locales[options.defaultLocale as keyof typeof locales] as () => Promise<FirstLocale>;
 
 	return {
 		getI18n: async () => {
@@ -40,8 +45,8 @@ export const createServerI18n = <T extends Record<string, unknown>>(
 				});
 			};
 		},
-		getScopedI18n: async <DP extends DeepKeyUnion<Awaited<T>>>(scope: DP) => {
-			const value = (await locale()) as Awaited<T>;
+		getScopedI18n: async <DP extends DeepKeyUnion<FirstLocale>>(scope: DP) => {
+			const value = (await locale()) as FirstLocale;
 			return <
 				T extends FlattenedValueByPath<typeof value, DP>,
 				V extends NestedValueByPath<typeof value, T>,
