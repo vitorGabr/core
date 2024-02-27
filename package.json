@@ -11,23 +11,23 @@
     },
     "./package.json": "./package.json",
     "./client": {
-      "types": "./dist/client/index.d.ts",
-      "default": "./dist/client/index.js"
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
     },
     "./server": {
-      "types": "./dist/server/index.d.ts",
-      "default": "./dist/server/index.js"
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
     },
     "./default": {
-      "types": "./dist/default/index.d.ts",
-      "default": "./dist/default/index.js"
+      "types": "./dist/default.d.ts",
+      "default": "./dist/default.js"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/create/client.ts src/create/server.ts src/create/default.ts --external next --external react --dts",
+    "build": "tsup src/create/client.tsx src/create/server.ts src/create/default.ts --external next --external react --dts",
     "release": "release-it",
     "test": "vitest"
   },
