@@ -37,21 +37,38 @@ describe("create-i18n-client", () => {
 	});
 
 	test("it show path when not found", async () => {
-		const { result } = renderHook(() => useScopedI18n("globals"), {
-			wrapper: Provider,
-		});
+		const { result: i18nResult } = renderHook(
+			() => {
+				const changeLocale = useChangeLocale();
+				const i18n = useI18n();
+				return { i18n, changeLocale };
+			},
+			{
+				wrapper: Provider,
+			},
+		);
+		
 		await waitFor(() => {
-			// @ts-expect-error - testing purpose
-			expect(result.current("notfound")).toBe("globals.notfound");
+			// @ts-ignore
+			expect(i18nResult.current.i18n("notfound")).toBe("notfound");
+		});
+
+		act(() => {
+			i18nResult.current.changeLocale('en-USa')
+		})
+
+		await waitFor(() => {
+			// @ts-ignore
+			expect(i18nResult.current.i18n("notfound")).toBe("notfound");
 		});
 	});
 
 	test("it change locale", async () => {
 		const { result: i18nResult } = renderHook(
 			() => {
-				const locale = useChangeLocale();
+				const changeLocale = useChangeLocale();
 				const i18n = useI18n();
-				return { i18n, locale };
+				return { i18n, changeLocale };
 			},
 			{
 				wrapper: Provider,
@@ -65,7 +82,7 @@ describe("create-i18n-client", () => {
 		});
 
 		act(() => {
-			i18nResult.current.locale("en-US"); // Altera a localidade
+			i18nResult.current.changeLocale("en-US"); // Altera a localidade
 		});
 
 		await waitFor(() => {

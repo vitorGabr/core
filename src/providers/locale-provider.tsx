@@ -7,17 +7,15 @@ import {
 } from "react";
 import type { CreateI18nOptions } from "../types";
 
-type LocaleContextType = {
+type LocaleContextType<T extends Record<string, unknown>> = {
 	dictionary: Record<string, unknown>;
-	locale: string;
+	locale: keyof T;
 	setLocale: (locale: string) => void;
 };
 
-const LocaleContext = createContext<LocaleContextType>({
-	dictionary: {},
-	locale: "",
-	setLocale: () => {},
-});
+const LocaleContext = createContext<LocaleContextType<any>>(
+	{} as LocaleContextType<any>,
+);
 
 const LocaleProvider = <
 	T extends Record<string, () => Promise<Record<string, unknown>>>,
@@ -30,7 +28,7 @@ const LocaleProvider = <
 	locales: T;
 	options: CreateI18nOptions<T>;
 }) => {
-	const [locale, setLocale] = useState("");
+	const [locale, setLocale] = useState(options.defaultLocale);
 	const [dictionary, setDictionary] = useState<Record<string, unknown>>(
 		{} as Record<string, unknown>,
 	);
@@ -52,12 +50,13 @@ const LocaleProvider = <
 	}, []);
 
 	useEffect(() => {
-		console.log("locale", locale);
 		if (locale) {
 			options?.storedLocale?.set(locale);
-			locales[locale]().then((value) => {
-				setDictionary(value as Record<string, unknown>);
-			});
+			if (locales[locale]) {
+				locales[locale]().then((value) => {
+					setDictionary(value);
+				});
+			}
 		}
 	}, [locale]);
 
@@ -66,7 +65,7 @@ const LocaleProvider = <
 			value={{
 				dictionary,
 				locale,
-				setLocale,
+				setLocale
 			}}
 		>
 			{children}
