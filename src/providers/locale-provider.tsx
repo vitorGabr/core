@@ -52,6 +52,7 @@ const LocaleProvider = <
 	}, []);
 
 	useEffect(() => {
+		console.log("locale", locale);
 		if (locale) {
 			options?.storedLocale?.set(locale);
 			locales[locale]().then((value) => {

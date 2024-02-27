@@ -41,7 +41,7 @@ export const createClientI18n = <T,>(
 				key: T,
 				params?: S,
 			) => {
-				if (!dictionary) return "";
+				if (!Object.keys(dictionary).length) return "";
 
 				return retrieveValueAtPath({
 					obj: dictionary,
@@ -60,6 +60,7 @@ export const createClientI18n = <T,>(
 				key: T,
 				params?: S,
 			) => {
+				if (!Object.keys(dictionary).length) return "";
 				return retrieveScopeValueAtPath({
 					obj: dictionary as FirstLocale,
 					scope,
@@ -68,11 +69,13 @@ export const createClientI18n = <T,>(
 				});
 			};
 		},
-		setLocale: (newLocale: keyof typeof locales) => {
+		useChangeLocale: () => {
 			const { setLocale } = useLocale();
-			if (newLocale in locales && typeof newLocale === "string") {
-				setLocale(newLocale);
-			}
+			return setLocale;
 		},
+		useGetLocale: () => {
+			const { locale } = useLocale();
+			return locale;
+		}
 	};
 };

@@ -1,21 +1,23 @@
 import { describe, expect, test } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act,  renderHook, waitFor } from "@testing-library/react";
 import { createClientI18n } from "../src/create/client";
 
-
 describe("create-i18n-client", () => {
-	const { useI18n, useScopedI18n, Provider } = createClientI18n(
-		{
-			"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
-		},
-		{
-			defaultLocale: "pt-BR",
-			storedLocale: {
-				get: async () => "pt-BR",
-				set: async () => {},
+	const { useI18n, useScopedI18n, Provider, useChangeLocale } =
+		createClientI18n(
+			{
+				"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
+				"en-US": () => import("./utils/en").then((module) => module.default),
 			},
-		},
-	);
+			{
+				defaultLocale: "pt-BR",
+				storedLocale: {
+					get: async () => "pt-BR",
+					set: async () => {},
+				},
+			},
+		);
+
 	test("it translate function work", async () => {
 		const { result } = renderHook(() => useI18n(), {
 			wrapper: Provider,
@@ -41,6 +43,35 @@ describe("create-i18n-client", () => {
 		await waitFor(() => {
 			// @ts-expect-error - testing purpose
 			expect(result.current("notfound")).toBe("globals.notfound");
+		});
+	});
+
+	test("it change locale", async () => {
+		const { result: i18nResult } = renderHook(
+			() => {
+				const locale = useChangeLocale();
+				const i18n = useI18n();
+				return { i18n, locale };
+			},
+			{
+				wrapper: Provider,
+			},
+		);
+
+		await waitFor(() => {
+			expect(i18nResult.current.i18n("globals.usert_types.admin")).toBe(
+				"Admin",
+			);
+		});
+
+		act(() => {
+			i18nResult.current.locale("en-US"); // Altera a localidade
+		});
+
+		await waitFor(() => {
+			expect(i18nResult.current.i18n("globals.usert_types.admin")).toBe(
+				"Admin2",
+			);
 		});
 	});
 });

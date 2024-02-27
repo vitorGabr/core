@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, test } from "vitest";
-import { createDefaultI18n, createServerI18n } from "../src";
+import { createDefaultI18n } from "../src";
 
 describe("types", () => {
 	const { t, scopedT } = createDefaultI18n(
