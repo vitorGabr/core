@@ -8,6 +8,9 @@ dependencies:
   react:
     specifier: ^18.2.0
     version: 18.2.0
+  server-only:
+    specifier: ^0.0.1
+    version: 0.0.1
   vitest:
     specifier: ^1.3.1
     version: 1.3.1(jsdom@24.0.0)
@@ -25,6 +28,9 @@ devDependencies:
   '@vitejs/plugin-react':
     specifier: ^4.2.1
     version: 4.2.1(vite@5.1.4)
+  esbuild-plugin-react18:
+    specifier: ^0.0.7
+    version: 0.0.7
   jsdom:
     specifier: ^24.0.0
     version: 24.0.0
@@ -1800,6 +1806,10 @@ packages:
       is-callable: 1.2.7
       is-date-object: 1.0.5
       is-symbol: 1.0.4
+    dev: true
+
+  /esbuild-plugin-react18@0.0.7:
+    resolution: {integrity: sha512-eJG1DVEIkJtdSW08Xv9vJ4gJ57gwnGoa/zLPmO1/bI72HKCyxz2AMubRfYs4msD9O3GLlCQgGEirMmA9ofwVDw==}
     dev: true
 
   /esbuild@0.19.12:
@@ -3737,6 +3747,10 @@ packages:
     dependencies:
       lru-cache: 6.0.0
     dev: true
+
+  /server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
+    dev: false
 
   /set-function-length@1.2.1:
     resolution: {integrity: sha512-j4t6ccc+VsKwYHso+kElc5neZpjtq9EnRICFZtWyBsLojhmeF/ZBd/elqm22WJh/BziDe/SBiOeAt0m2mfLD0g==}

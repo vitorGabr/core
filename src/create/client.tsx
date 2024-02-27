@@ -1,3 +1,5 @@
+'use client'
+
 import { retrieveValueAtPath, retrieveScopeValueAtPath } from "../functions";
 import { LocaleProvider, useLocale } from "../providers/locale-provider";
 import type {
