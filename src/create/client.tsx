@@ -1,6 +1,5 @@
-import { Provider, useAtom } from "jotai";
+import { Provider as JOTAIPROVIDER, useAtom } from "jotai";
 import { retrieveValueAtPath, retrieveScopeValueAtPath, getServerLocale } from "../functions";
-import { LocaleProvider, useLocale } from "../providers";
 import type {
 	CreateI18nOptions,
 	CreateI18nProps,
@@ -32,14 +31,14 @@ export const createClientI18n = <T,>(
 			children: React.ReactNode;
 		}) => {
 
-			const fetch = async () => {
+			const fetcha = async () => {
 				const _d = await getServerLocale(locales, options);
 				dictionaryStore.set(dictionaryAtom, _d);
 			}
 
-			fetch();
+			fetcha();
 
-			return <Provider store={dictionaryStore}>{children}</Provider>;
+			return <JOTAIPROVIDER store={dictionaryStore}>{children}</JOTAIPROVIDER>;
 		},
 		useI18n: () => {
 			const [dictionary] = useAtom(dictionaryAtom);
