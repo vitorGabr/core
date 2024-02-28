@@ -27,7 +27,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/create/client.tsx src/create/server.ts src/create/default.ts --external next --external react --dts",
+    "build": "tsup",
     "release": "release-it",
     "test": "vitest"
   },

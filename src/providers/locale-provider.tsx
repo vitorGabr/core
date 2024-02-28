@@ -1,9 +1,12 @@
+"use client"
+
 import {
 	createContext,
 	useState,
 	type ReactNode,
 	useContext,
 	useEffect,
+	useMemo,
 } from "react";
 import type { CreateI18nOptions } from "../types";
 
@@ -23,15 +26,15 @@ const LocaleProvider = <
 	children,
 	locales,
 	options,
+	defaultLocale,
 }: {
 	children: ReactNode;
 	locales: T;
 	options: CreateI18nOptions<T>;
+	defaultLocale: Record<string, unknown>;
 }) => {
 	const [locale, setLocale] = useState(options.defaultLocale);
-	const [dictionary, setDictionary] = useState<Record<string, unknown>>(
-		{} as Record<string, unknown>,
-	);
+	const [dictionary, setDictionary] = useState<Record<string, unknown>>(defaultLocale);
 
 	async function getLocale() {
 		let _locale = options.defaultLocale;
@@ -49,7 +52,7 @@ const LocaleProvider = <
 		});
 	}, []);
 
-	useEffect(() => {
+	useMemo(() => {
 		if (locale) {
 			options?.storedLocale?.set(locale);
 			if (locales[locale]) {
