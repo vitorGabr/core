@@ -5,7 +5,6 @@ export default defineConfig((options) => ({
 		"src/create/client.tsx",
 		"src/create/server.ts",
 		"src/create/default.ts",
-        "src/index.ts",
 	],
 	treeshake: true,
 	splitting: true,
@@ -14,9 +13,4 @@ export default defineConfig((options) => ({
 	clean: true,
 	external: ["react"],
 	outDir: "dist",
-    esbuildOptions(options) {
-        options.banner = {
-          js: '"use client"',
-        };
-      },
 }));
