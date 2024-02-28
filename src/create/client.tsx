@@ -1,4 +1,5 @@
-import { retrieveValueAtPath, retrieveScopeValueAtPath } from "../functions";
+import { Provider, useAtom } from "jotai";
+import { retrieveValueAtPath, retrieveScopeValueAtPath, getServerLocale } from "../functions";
 import { LocaleProvider, useLocale } from "../providers";
 import type {
 	CreateI18nOptions,
@@ -9,6 +10,7 @@ import type {
 	NestedValueByPath,
 	StringParameters,
 } from "../types";
+import { dictionaryAtom, dictionaryStore } from "../atoms/locale-atom";
 
 export const createClientI18n = <T,>(
 	locales: CreateI18nProps<T>,
@@ -19,30 +21,28 @@ export const createClientI18n = <T,>(
 		infer R
 	>
 		? R extends Record<string, unknown>
-			? R
-			: never
+		? R
+		: never
 		: never;
 
 	return {
 		Provider: ({
 			children,
-			defaultLocale = {},
 		}: {
 			children: React.ReactNode;
-			defaultLocale?: Record<string, unknown>;
 		}) => {
-			return (
-				<LocaleProvider
-					defaultLocale={defaultLocale}
-					locales={locales}
-					options={options}
-				>
-					{children}
-				</LocaleProvider>
-			);
+
+			const fetch = async () => {
+				const _d = await getServerLocale(locales, options);
+				dictionaryStore.set(dictionaryAtom, _d);
+			}
+
+			fetch();
+
+			return <Provider store={dictionaryStore}>{children}</Provider>;
 		},
 		useI18n: () => {
-			const { dictionary } = useLocale();
+			const [dictionary] = useAtom(dictionaryAtom);
 			return <
 				T extends DeepKeyStringUnion<FirstLocale>,
 				V extends NestedValueByPath<FirstLocale, T>,
@@ -61,7 +61,7 @@ export const createClientI18n = <T,>(
 			};
 		},
 		useScopedI18n: <DP extends DeepKeyUnion<FirstLocale>>(scope: DP) => {
-			const { dictionary } = useLocale();
+			const [dictionary] = useAtom(dictionaryAtom);
 			return <
 				T extends FlattenedValueByPath<FirstLocale, DP>,
 				V extends NestedValueByPath<FirstLocale, T>,
@@ -80,12 +80,11 @@ export const createClientI18n = <T,>(
 			};
 		},
 		useChangeLocale: () => {
-			const { setLocale } = useLocale();
-			return setLocale;
+			const [_, setDictionary] = useAtom(dictionaryAtom);
+			return setDictionary;
 		},
 		useGetLocale: () => {
-			const { locale } = useLocale();
-			return locale;
+			return 'locale';
 		},
 	};
 };
