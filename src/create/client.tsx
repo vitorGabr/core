@@ -1,5 +1,3 @@
-import 'client-only';
-
 import { Suspense } from "react";
 import {
 	retrieveValueAtPath,
