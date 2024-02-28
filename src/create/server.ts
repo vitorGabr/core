@@ -27,6 +27,10 @@ export const createServerI18n = <T,>(
 		: never;
 
 	return {
+		getCurrentDictionary: async () => {
+			const value = await getServerLocale(locales, options);
+			return value;
+		},
 		getI18n: async () => {
 			const value = await getServerLocale(locales, options);
 			return <

@@ -1,5 +1,3 @@
-import 'client-only';
-
 import {
 	createContext,
 	useState,
@@ -34,7 +32,8 @@ const LocaleProvider = <
 	defaultLocale: Record<string, unknown>;
 }) => {
 	const [locale, setLocale] = useState(options.defaultLocale);
-	const [dictionary, setDictionary] = useState<Record<string, unknown>>(defaultLocale);
+	const [dictionary, setDictionary] =
+		useState<Record<string, unknown>>(defaultLocale);
 
 	async function getLocale() {
 		let _locale = options.defaultLocale;
@@ -68,7 +67,7 @@ const LocaleProvider = <
 			value={{
 				dictionary,
 				locale,
-				setLocale
+				setLocale,
 			}}
 		>
 			{children}

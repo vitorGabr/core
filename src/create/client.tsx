@@ -1,9 +1,5 @@
-import { Suspense } from "react";
-import {
-	retrieveValueAtPath,
-	retrieveScopeValueAtPath,
-	getServerLocale,
-} from "../functions";
+import "client-only";
+import { retrieveValueAtPath, retrieveScopeValueAtPath } from "../functions";
 import { LocaleProvider, useLocale } from "../providers/locale-provider";
 import type {
 	CreateI18nOptions,
@@ -29,18 +25,21 @@ export const createClientI18n = <T,>(
 		: never;
 
 	return {
-		Provider: async ({ children }: { children: React.ReactNode }) => {
-			const _defaultLocale = await getServerLocale(locales, options);
+		Provider: ({
+			children,
+			defaultLocale = {},
+		}: {
+			children: React.ReactNode;
+			defaultLocale?: Record<string, unknown>;
+		}) => {
 			return (
-				<Suspense>
-					<LocaleProvider
-						defaultLocale={_defaultLocale}
-						locales={locales}
-						options={options}
-					>
-						{children}
-					</LocaleProvider>
-				</Suspense>
+				<LocaleProvider
+					defaultLocale={defaultLocale}
+					locales={locales}
+					options={options}
+				>
+					{children}
+				</LocaleProvider>
 			);
 		},
 		useI18n: () => {
