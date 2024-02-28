@@ -1,5 +1,5 @@
 import { retrieveValueAtPath, retrieveScopeValueAtPath } from "../functions";
-import { LocaleProvider, useLocale } from "../providers/locale-provider";
+import { LocaleProvider, useLocale } from "../providers";
 import type {
 	CreateI18nOptions,
 	CreateI18nProps,
