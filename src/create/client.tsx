@@ -1,5 +1,7 @@
-import { Provider as JOTAIPROVIDER, useAtom } from "jotai";
-import { retrieveValueAtPath, retrieveScopeValueAtPath, getServerLocale } from "../functions";
+import {
+	retrieveValueAtPath,
+	retrieveScopeValueAtPath,
+} from "../functions";
 import type {
 	CreateI18nOptions,
 	CreateI18nProps,
@@ -9,7 +11,8 @@ import type {
 	NestedValueByPath,
 	StringParameters,
 } from "../types";
-import { dictionaryAtom, dictionaryStore } from "../atoms/locale-atom";
+
+import { LocaleProvider, useLocale } from "../providers";
 
 export const createClientI18n = <T,>(
 	locales: CreateI18nProps<T>,
@@ -20,8 +23,8 @@ export const createClientI18n = <T,>(
 		infer R
 	>
 		? R extends Record<string, unknown>
-		? R
-		: never
+			? R
+			: never
 		: never;
 
 	return {
@@ -30,18 +33,14 @@ export const createClientI18n = <T,>(
 		}: {
 			children: React.ReactNode;
 		}) => {
-
-			const fetcha = async () => {
-				const _d = await getServerLocale(locales, options);
-				dictionaryStore.set(dictionaryAtom, _d);
-			}
-
-			fetcha();
-
-			return <JOTAIPROVIDER store={dictionaryStore}>{children}</JOTAIPROVIDER>;
+			return (
+				<LocaleProvider locales={locales} options={options} defaultLocale={{}}>
+					{children}
+				</LocaleProvider>
+			);
 		},
 		useI18n: () => {
-			const [dictionary] = useAtom(dictionaryAtom);
+			const {dictionary} = useLocale();
 			return <
 				T extends DeepKeyStringUnion<FirstLocale>,
 				V extends NestedValueByPath<FirstLocale, T>,
@@ -50,8 +49,9 @@ export const createClientI18n = <T,>(
 				key: T,
 				params?: S,
 			) => {
-				if (!Object.keys(dictionary).length) return "";
-
+				if(Object.keys(dictionary).length === 0){
+					return ""
+				}
 				return retrieveValueAtPath({
 					obj: dictionary,
 					path: key,
@@ -60,7 +60,8 @@ export const createClientI18n = <T,>(
 			};
 		},
 		useScopedI18n: <DP extends DeepKeyUnion<FirstLocale>>(scope: DP) => {
-			const [dictionary] = useAtom(dictionaryAtom);
+			const {dictionary} = useLocale();
+			
 			return <
 				T extends FlattenedValueByPath<FirstLocale, DP>,
 				V extends NestedValueByPath<FirstLocale, T>,
@@ -69,7 +70,9 @@ export const createClientI18n = <T,>(
 				key: T,
 				params?: S,
 			) => {
-				if (!Object.keys(dictionary).length) return "";
+				if(Object.keys(dictionary).length === 0){
+					return ""
+				}
 				return retrieveScopeValueAtPath({
 					obj: dictionary as FirstLocale,
 					scope,
@@ -79,11 +82,12 @@ export const createClientI18n = <T,>(
 			};
 		},
 		useChangeLocale: () => {
-			const [_, setDictionary] = useAtom(dictionaryAtom);
-			return setDictionary;
+			const {setLocale} = useLocale();
+			return setLocale;
 		},
 		useGetLocale: () => {
-			return 'locale';
+			const {locale} = useLocale();
+			return locale;
 		},
 	};
 };
