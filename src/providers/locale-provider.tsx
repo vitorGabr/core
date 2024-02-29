@@ -5,6 +5,7 @@ import {
 	useContext,
 	Suspense,
 	type ComponentProps,
+	useState,
 } from "react";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
@@ -33,6 +34,8 @@ const LocaleProvider = <
 	locale: keyof T | Promise<string>;
 	onUpadteLocale: (newLocale: keyof T) => void;
 }) => {
+	const [currentLocale,setCurrentLocale] = useState(locale);
+
 	const fetchLocale = async (_locale: keyof T) => {
 		if (!locales[_locale]) {
 			return locales[defaultLocale]();
@@ -43,7 +46,7 @@ const LocaleProvider = <
 	const queryClient = useQueryClient();
 	const { data } = useSuspenseQuery(
 		{
-			queryKey: ["locale", locale],
+			queryKey: ["locale",currentLocale],
 			queryFn: async () => {
 				const _locale = await locale;
 				return fetchLocale(_locale);
@@ -53,15 +56,14 @@ const LocaleProvider = <
 
 	const updateLocale = async (newLocale: keyof T) => {
 		onUpadteLocale(newLocale);
-		const newLocaleData = await fetchLocale(newLocale);
-		queryClient.setQueryData(["locale"], newLocaleData);
+		setCurrentLocale(newLocale);
 	}
 
 	return (
 		<LocaleContext.Provider
 			value={{
 				dictionary: data || {},
-				locale,
+				locale: currentLocale,
 				updateLocale: (newLocale: keyof T) => updateLocale(newLocale),
 			}}
 		>
