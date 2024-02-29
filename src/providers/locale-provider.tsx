@@ -54,7 +54,7 @@ const LocaleProvider = <
 	const updateLocale = async (newLocale: keyof T) => {
 		onUpadteLocale(newLocale);
 		const newLocaleData = await fetchLocale(newLocale);
-		queryClient.setQueryData(["locale", newLocale], newLocaleData);
+		queryClient.setQueryData(["locale"], newLocaleData);
 	}
 
 	return (
