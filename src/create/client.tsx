@@ -44,6 +44,7 @@ export const createClientI18n = <T,>(
 					<WrappedLocaleProvider
 						locales={locales}
 						locale={_locale as any}
+						defaultLocale={options.defaultLocale as any} 
 						onUpadteLocale={options.storedLocale.set}
 					>
 						{children}

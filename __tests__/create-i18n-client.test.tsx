@@ -10,6 +10,7 @@ describe("create-i18n-client", () => {
 				"en-US": () => import("./utils/en").then((module) => module.default),
 			},
 			{
+				defaultLocale: "pt-BR",
 				storedLocale: {
 					get: async () => 'pt-BR',
 					set: async (locale) => {},

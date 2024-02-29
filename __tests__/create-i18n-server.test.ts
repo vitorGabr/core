@@ -7,6 +7,7 @@ describe("create-i18n-server", () => {
 			"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
 		},
 		{
+			defaultLocale: "pt-BR",
 			storedLocale: {
 				get: async () => "pt-BR",
 				set: async () => {},

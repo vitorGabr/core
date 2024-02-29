@@ -24,16 +24,18 @@ const LocaleProvider = <
 	children,
 	locales,
 	locale,
-	onUpadteLocale
+	onUpadteLocale,
+	defaultLocale,
 }: {
 	children: ReactNode;
 	locales: T;
+	defaultLocale: keyof T;
 	locale: keyof T | Promise<string>;
 	onUpadteLocale: (newLocale: keyof T) => void;
 }) => {
 	const fetchLocale = async (_locale: keyof T) => {
 		if (!locales[_locale]) {
-			return {}
+			return locales[defaultLocale]();
 		}
 		return locales[_locale]();
 	};
