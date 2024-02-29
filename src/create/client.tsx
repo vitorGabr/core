@@ -12,7 +12,8 @@ import type {
 	StringParameters,
 } from "../types";
 
-import { LocaleProvider, useLocale } from "../providers";
+import { useLocale, WrappedLocaleProvider } from "../providers/locale-provider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export const createClientI18n = <T,>(
 	locales: CreateI18nProps<T>,
@@ -23,24 +24,35 @@ export const createClientI18n = <T,>(
 		infer R
 	>
 		? R extends Record<string, unknown>
-			? R
-			: never
+		? R
+		: never
 		: never;
+
+	const queryClient = new QueryClient()
 
 	return {
 		Provider: ({
 			children,
+			locale,
 		}: {
 			children: React.ReactNode;
+			locale?: keyof T;
 		}) => {
+			const _locale = locale || options.storedLocale.get();
 			return (
-				<LocaleProvider locales={locales} options={options} defaultLocale={{}}>
-					{children}
-				</LocaleProvider>
+				<QueryClientProvider client={queryClient}>
+					<WrappedLocaleProvider
+						locales={locales}
+						locale={_locale as any}
+						onUpadteLocale={options.storedLocale.set}
+					>
+						{children}
+					</WrappedLocaleProvider>
+				</QueryClientProvider>
 			);
 		},
 		useI18n: () => {
-			const {dictionary} = useLocale();
+			const { dictionary } = useLocale();
 			return <
 				T extends DeepKeyStringUnion<FirstLocale>,
 				V extends NestedValueByPath<FirstLocale, T>,
@@ -49,7 +61,7 @@ export const createClientI18n = <T,>(
 				key: T,
 				params?: S,
 			) => {
-				if(Object.keys(dictionary).length === 0){
+				if (Object.keys(dictionary).length === 0) {
 					return ""
 				}
 				return retrieveValueAtPath({
@@ -60,8 +72,8 @@ export const createClientI18n = <T,>(
 			};
 		},
 		useScopedI18n: <DP extends DeepKeyUnion<FirstLocale>>(scope: DP) => {
-			const {dictionary} = useLocale();
-			
+			const { dictionary } = useLocale();
+
 			return <
 				T extends FlattenedValueByPath<FirstLocale, DP>,
 				V extends NestedValueByPath<FirstLocale, T>,
@@ -70,7 +82,7 @@ export const createClientI18n = <T,>(
 				key: T,
 				params?: S,
 			) => {
-				if(Object.keys(dictionary).length === 0){
+				if (Object.keys(dictionary).length === 0) {
 					return ""
 				}
 				return retrieveScopeValueAtPath({
@@ -82,11 +94,11 @@ export const createClientI18n = <T,>(
 			};
 		},
 		useChangeLocale: () => {
-			const {setLocale} = useLocale();
-			return setLocale;
+			const { updateLocale } = useLocale();
+			return updateLocale;
 		},
 		useGetLocale: () => {
-			const {locale} = useLocale();
+			const { locale } = useLocale();
 			return locale;
 		},
 	};

@@ -10,10 +10,9 @@ describe("create-i18n-client", () => {
 				"en-US": () => import("./utils/en").then((module) => module.default),
 			},
 			{
-				defaultLocale: "pt-BR",
 				storedLocale: {
-					get: async () => "pt-BR",
-					set: async () => {},
+					get: async () => 'pt-BR',
+					set: async (locale) => {},
 				},
 			},
 		);
@@ -53,14 +52,14 @@ describe("create-i18n-client", () => {
 			expect(i18nResult.current.i18n("notfound")).toBe("notfound");
 		});
 
-		// act(() => {
-		// 	i18nResult.current.changeLocale('en-USa')
-		// })
+		act(() => {
+			i18nResult.current.changeLocale('en-USa')
+		})
 
-		// await waitFor(() => {
-		// 	// @ts-ignore
-		// 	expect(i18nResult.current.i18n("notfound")).toBe("notfound");
-		// });
+		await waitFor(() => {
+			// @ts-ignore
+			expect(i18nResult.current.i18n("notfound")).toBe("notfound");
+		});
 	});
 
 	test("it change locale", async () => {

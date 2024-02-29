@@ -1,17 +1,17 @@
+
 import {
 	createContext,
-	useState,
 	type ReactNode,
 	useContext,
-	useEffect,
-	useMemo,
+	Suspense,
+	type ComponentProps,
 } from "react";
-import type { CreateI18nOptions } from "../types";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 
 type LocaleContextType<T extends Record<string, unknown>> = {
 	dictionary: Record<string, unknown>;
-	locale: keyof T;
-	setLocale: (locale: string) => void;
+	locale: keyof T | Promise<string>;
+	updateLocale: (locale: string) => void;
 };
 
 const LocaleContext = createContext<LocaleContextType<any>>(
@@ -23,51 +23,44 @@ const LocaleProvider = <
 >({
 	children,
 	locales,
-	options,
-	defaultLocale,
+	locale,
+	onUpadteLocale
 }: {
 	children: ReactNode;
 	locales: T;
-	options: CreateI18nOptions<T>;
-	defaultLocale: Record<string, unknown>;
+	locale: keyof T | Promise<string>;
+	onUpadteLocale: (newLocale: keyof T) => void;
 }) => {
-	const [locale, setLocale] = useState(options.defaultLocale);
-	const [dictionary, setDictionary] =
-		useState<Record<string, unknown>>(defaultLocale);
-
-	async function getLocale() {
-		let _locale = options.defaultLocale;
-		if (options.storedLocale) {
-			_locale = await options.storedLocale.get();
+	const fetchLocale = async (_locale: keyof T) => {
+		if (!locales[_locale]) {
+			return {}
 		}
-		return _locale as string;
+		return locales[_locale]();
+	};
+
+	const queryClient = useQueryClient();
+	const { data } = useSuspenseQuery(
+		{
+			queryKey: ["locale", locale],
+			queryFn: async () => {
+				const _locale = await locale;
+				return fetchLocale(_locale);
+			},
+		}
+	);
+
+	const updateLocale = async (newLocale: keyof T) => {
+		onUpadteLocale(newLocale);
+		const newLocaleData = await fetchLocale(newLocale);
+		queryClient.setQueryData(["locale", newLocale], newLocaleData);
 	}
-
-	useEffect(() => {
-		getLocale().then((value) => {
-			if (value) {
-				setLocale(value);
-			}
-		});
-	}, []);
-
-	useMemo(() => {
-		if (locale) {
-			options?.storedLocale?.set(locale);
-			if (locales[locale]) {
-				locales[locale]().then((value) => {
-					setDictionary(value);
-				});
-			}
-		}
-	}, [locale]);
 
 	return (
 		<LocaleContext.Provider
 			value={{
-				dictionary,
+				dictionary: data || {},
 				locale,
-				setLocale,
+				updateLocale: (newLocale: keyof T) => updateLocale(newLocale),
 			}}
 		>
 			{children}
@@ -80,4 +73,12 @@ const useLocale = () => {
 	return locale;
 };
 
-export { LocaleProvider, LocaleContext, useLocale };
+const WrappedLocaleProvider = (props: ComponentProps<typeof LocaleProvider>) => {
+	return <Suspense>
+		<LocaleProvider
+			{...props}
+		/>
+	</Suspense>
+}
+
+export { LocaleProvider, LocaleContext, useLocale, WrappedLocaleProvider };
