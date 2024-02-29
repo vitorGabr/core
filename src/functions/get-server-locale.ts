@@ -4,11 +4,12 @@ export const getServerLocale = async <T>(
 	locales: CreateI18nProps<T>,
 	options: CreateI18nOptions<typeof locales>,
 ) => {
-	let locale = options.defaultLocale;
-	if (options.storedLocale) {
-		locale = (await options.storedLocale.get()) as keyof T;
+	const locale = (await options.storedLocale.get()) as keyof T
+	
+	if(!locales[locale]) {
+		// @ts-expect-error - testing purpose
+		return locales[options.defaultLocale]();
 	}
-
 	// @ts-expect-error - testing purpose
 	return locales[locale]();
 };
