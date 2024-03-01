@@ -6,7 +6,9 @@ export type ImportedLocales = {
 
 export type Locale<T extends ImportedLocales[keyof ImportedLocales]> = T extends Promise<infer R>
 	? R extends { default: infer T }
-		? T
+		? T extends Record<string, unknown>
+			? T
+			: never
 		: never
 	: never;
 

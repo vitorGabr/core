@@ -3,7 +3,7 @@ import type {
 	DeepKeyUnion,
 	FlattenedValueByPath,
 } from "../../types";
-import type { ImportedLocales, Locale } from "../../types/create-i18n";
+import type { ImportedLocales, Locale } from "../../types/i18n";
 
 export const createDefaultI18n = <Locales extends ImportedLocales>(
 	locales: Locales,

@@ -1,5 +1,5 @@
 import { Suspense, useState,  type Context } from "react";
-import type { ImportedLocales, LocaleOptions } from "../../types/create-i18n";
+import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
 import {
 	QueryClient,
 	QueryClientProvider,

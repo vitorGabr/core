@@ -1,4 +1,4 @@
-import type { LocaleOptions, ImportedLocales,Locale } from "./create-i18n";
+import type { LocaleOptions, ImportedLocales,Locale } from "./i18n";
 import type {
 	DeepKeyStringUnion,
 	DeepKeyUnion,
