@@ -1,22 +1,15 @@
 import type {
-	CreateI18nProps,
 	DeepKeyStringUnion,
 	DeepKeyUnion,
 	FlattenedValueByPath,
-} from "../types";
+} from "../../types";
+import type { ImportedLocales, Locale } from "../../types/create-i18n";
 
-export const createDefaultI18n = <T,>(
-	locales: CreateI18nProps<T>,
+export const createDefaultI18n = <Locales extends ImportedLocales>(
+	locales: Locales,
 ) => {
-	const firstLocale = Object.keys(locales)[0] as keyof T;
-	type FirstLocale = (typeof locales)[typeof firstLocale] extends () => Promise<
-		infer R
-	>
-		? R extends Record<string, unknown>
-			? R
-			: never
-		: never;
-
+	const firstLocale = Object.keys(locales)[0] as keyof Locales;
+	type FirstLocale = Locale<Locales[typeof firstLocale]>;
 
 	return {
 		t: (key: DeepKeyStringUnion<FirstLocale>) => {

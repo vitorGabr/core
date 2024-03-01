@@ -1,14 +1,16 @@
-export type CreateI18nProps<T> = T extends {
-	[K in keyof T]: T[K] extends () => Promise<infer R>
-		? R extends Record<string, unknown>
-			? T[K]
-			: never
-		: never;
-}
-	? T
+export type ImportedLocales = {
+	[K in string]: Promise<{
+		default: Record<string, unknown>;
+	}>;
+};
+
+export type Locale<T extends ImportedLocales[keyof ImportedLocales]> = T extends Promise<infer R>
+	? R extends { default: infer T }
+		? T
+		: never
 	: never;
 
-export type CreateI18nOptions<T extends Record<string, unknown>> = {
+export type LocaleOptions<T extends Record<string, unknown>> = {
 	defaultLocale: keyof T;
 	storedLocale: {
 		get: () => Promise<string>;

@@ -1,36 +1,28 @@
 import {
 	retrieveValueAtPath,
 	retrieveScopeValueAtPath,
-	getServerLocale,
-} from "../functions";
+} from "../../functions";
 import type {
-	CreateI18nProps,
-	CreateI18nOptions,
 	StringParameters,
 	DeepKeyStringUnion,
 	DeepKeyUnion,
 	FlattenedValueByPath,
 	NestedValueByPath,
-} from "../types";
+	ImportedLocales, Locale, LocaleOptions,
+} from "../../types";
 
-export const createServerI18n = <T,>(
-	locales: CreateI18nProps<T>,
-	options: CreateI18nOptions<typeof locales>,
+import { getServerLocale } from "./get-server-locale";
+
+export const createServerI18n = <
+	Locales extends ImportedLocales,
+>(
+	locales: Locales,
+	options: LocaleOptions<typeof locales>,
 ) => {
-	const firstLocale = Object.keys(locales)[0] as keyof T;
-	type FirstLocale = (typeof locales)[typeof firstLocale] extends () => Promise<
-		infer R
-	>
-		? R extends Record<string, unknown>
-			? R
-			: never
-		: never;
+	const firstLocale = Object.keys(locales)[0] as keyof Locales;
+	type FirstLocale = Locale<Locales[typeof firstLocale]>
 
 	return {
-		getCurrentDictionary: async () => {
-			const value = await getServerLocale(locales, options);
-			return value;
-		},
 		getI18n: async () => {
 			const value = await getServerLocale(locales, options);
 			return <
@@ -59,7 +51,7 @@ export const createServerI18n = <T,>(
 				params?: S,
 			) => {
 				return retrieveScopeValueAtPath({
-					obj: value,
+					obj: value as FirstLocale,
 					scope,
 					path: key,
 					params,

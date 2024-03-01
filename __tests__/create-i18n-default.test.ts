@@ -3,7 +3,7 @@ import { createDefaultI18n } from "../src/create/default";
 
 describe("flatten objects", () => {
 	const { t,scopedT } = createDefaultI18n({
-		"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
+		"pt-BR": import("./utils/pt-br"),
 	});
 
 	test("it show same path key", async () => {

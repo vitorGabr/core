@@ -1,4 +1,4 @@
-import type { CreateI18nOptions, CreateI18nProps } from "./create-i18n";
+import type { LocaleOptions, ImportedLocales,Locale } from "./create-i18n";
 import type {
 	DeepKeyStringUnion,
 	DeepKeyUnion,
@@ -9,8 +9,9 @@ import type {
 import type { StringParameters } from "./string-parameters";
 
 export type {
-    CreateI18nOptions,
-    CreateI18nProps,
+    ImportedLocales,
+    Locale,
+    LocaleOptions,
     DeepKeyStringUnion,
     DeepKeyUnion,
     FlattenedValueByPath,

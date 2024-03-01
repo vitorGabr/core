@@ -4,7 +4,7 @@ import { createDefaultI18n } from "../src/create/default";
 describe("types", () => {
 	const { t, scopedT } = createDefaultI18n(
 		{
-			"pt-BR": () => import("./utils/pt-br").then((module) => module.default),
+			"pt-BR": import("./utils/pt-br"),
 		},
 	);
 
