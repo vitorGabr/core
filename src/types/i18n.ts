@@ -16,7 +16,7 @@ export type Locale<T extends ImportedLocales[keyof ImportedLocales]> =
 export type LocaleOptions<T extends Record<string, unknown>> = {
 	defaultLocale: keyof T;
 	storedLocale: {
-		get: Promise<string | null | undefined> | string;
+		get: Promise<string | null | undefined> | string | null | undefined;
 		set: (locale: string) => Promise<void>;
 	};
 };
