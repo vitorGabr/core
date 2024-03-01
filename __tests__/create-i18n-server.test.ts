@@ -10,7 +10,7 @@ describe("create-i18n-server", () => {
 		{
 			defaultLocale: "pt-BR",
 			storedLocale: {
-				get: "pt-BR",
+				get: ()=>"pt-BR",
 			},
 		},
 	);

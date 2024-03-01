@@ -5,10 +5,7 @@ export const getServerLocale = async <Locales extends ImportedLocales>(
 	options: LocaleServerOptions<typeof locales>,
 ) => {
 	try {
-		const locale =
-			typeof options.storedLocale.get === "string"
-				? options.storedLocale.get
-				: await options.storedLocale.get;
+		const locale = await options.storedLocale.get();
 
 		return (await locales[locale as string]).default;
 	} catch (error) {

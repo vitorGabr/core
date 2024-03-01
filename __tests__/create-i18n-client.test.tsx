@@ -12,7 +12,7 @@ describe("create-i18n-client", () => {
 			{
 				defaultLocale: "pt-BR",
 				storedLocale: {
-					get: 'pt-BR',
+					get: ()=>'pt-BR',
 					set: async (locale) => {},
 				},
 			},

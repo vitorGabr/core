@@ -43,10 +43,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 			queryKey: ["locale"],
 			queryFn: async () => {
 				const locale =
-					currentLocale ||
-					(typeof options.storedLocale.get === "string"
-						? options.storedLocale.get
-						: await options.storedLocale.get);
+					currentLocale || await options.storedLocale.get();;
 				return fetchLocale(locale);
 			},
 		});
