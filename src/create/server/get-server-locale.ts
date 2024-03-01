@@ -1,8 +1,8 @@
-import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
+import type { ImportedLocales, LocaleServerOptions } from "../../types/i18n";
 
 export const getServerLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
-	options: LocaleOptions<typeof locales>,
+	options: LocaleServerOptions<typeof locales>,
 ) => {
 	try {
 		const locale = (await options.storedLocale.get()) as keyof Locales;

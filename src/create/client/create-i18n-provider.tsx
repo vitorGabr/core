@@ -22,18 +22,18 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 	options: LocaleOptions<Locales>;
 	I18nContext: Context<LocaleContextType<Locales> | null>;
 }) {
-	function LocaleProvide({children,locale}:{
+	function LocaleProvider({children,locale}:{
 		locale?: keyof Locales;
 		children: React.ReactNode;
 	}) {
 		const queryClient = useQueryClient();
 		const [currentLocale, setCurrentLocale] = useState(locale);
 
-		const fetchLocale = async (_locale: keyof Locales) => {
-			if (!Object.keys(locales).includes(_locale as string)) {
+		const fetchLocale = async (_locale: keyof Locales | null | undefined) => {
+			if(!Object.keys(locales).includes(_locale as string)){
 				return (await locales[options.defaultLocale]).default;
 			}
-			return (await locales[_locale]).default;
+			return (await locales[_locale as string]).default;
 		};
 
 		const { data } = useSuspenseQuery({
@@ -74,7 +74,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		return (
 			<QueryClientProvider client={queryClient}>
 				<Suspense>
-					<LocaleProvide {...props} />
+					<LocaleProvider {...props} />
 				</Suspense>
 			</QueryClientProvider>
 		);

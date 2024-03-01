@@ -11,7 +11,6 @@ describe("create-i18n-server", () => {
 			defaultLocale: "pt-BR",
 			storedLocale: {
 				get: async () => "pt-BR",
-				set: async () => {},
 			},
 		},
 	);
