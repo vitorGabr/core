@@ -1,4 +1,4 @@
-import { Suspense, useState,  type Context } from "react";
+import { Suspense, useState, type Context } from "react";
 import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
 import {
 	QueryClient,
@@ -16,13 +16,16 @@ export type LocaleContextType<T extends Record<string, unknown>> = {
 export function createI18nProvider<Locales extends ImportedLocales>({
 	locales,
 	I18nContext,
-	options
+	options,
 }: {
 	locales: Locales;
 	options: LocaleOptions<Locales>;
 	I18nContext: Context<LocaleContextType<Locales> | null>;
 }) {
-	function LocaleProvider({children,locale}:{
+	function LocaleProvider({
+		children,
+		locale,
+	}: {
 		locale?: keyof Locales;
 		children: React.ReactNode;
 	}) {
@@ -30,7 +33,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		const [currentLocale, setCurrentLocale] = useState(locale);
 
 		const fetchLocale = async (_locale: keyof Locales | null | undefined) => {
-			if(!Object.keys(locales).includes(_locale as string)){
+			if (!Object.keys(locales).includes(_locale as string)) {
 				return (await locales[options.defaultLocale]).default;
 			}
 			return (await locales[_locale as string]).default;
@@ -39,8 +42,12 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		const { data } = useSuspenseQuery({
 			queryKey: ["locale"],
 			queryFn: async () => {
-				const _locale = currentLocale || await options.storedLocale.get();
-				return fetchLocale(_locale);
+				const locale =
+					currentLocale ||
+					(typeof options.storedLocale.get === "string"
+						? options.storedLocale.get
+						: await options.storedLocale.get);
+				return fetchLocale(locale);
 			},
 		});
 
@@ -65,11 +72,11 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		);
 	}
 
-	return function WrappedLocaleProvider(props:{
+	return function WrappedLocaleProvider(props: {
 		locale?: keyof Locales;
 		children: React.ReactNode;
 	}) {
-		const queryClient = new QueryClient()
+		const queryClient = new QueryClient();
 
 		return (
 			<QueryClientProvider client={queryClient}>

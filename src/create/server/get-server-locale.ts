@@ -4,14 +4,14 @@ export const getServerLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
 	options: LocaleServerOptions<typeof locales>,
 ) => {
-	console.log('aqui')
 	try {
-		const locale = (await options.storedLocale.get()) as keyof Locales;
-		console.log('locale', locale)
-		return (await locales[locale]).default;
+		const locale =
+			typeof options.storedLocale.get === "string"
+				? options.storedLocale.get
+				: await options.storedLocale.get;
+
+		return (await locales[locale as string]).default;
 	} catch (error) {
-		console.log('error', error);
-		console.log('locale error', options.defaultLocale);
 		return (await locales[options.defaultLocale]).default;
 	}
 };
