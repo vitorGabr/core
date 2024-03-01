@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { createScopedT, createT } from "./create-server-i18n";
 import type {
 	ImportedLocales, Locale
