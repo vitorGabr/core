@@ -27,7 +27,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 	}) {
 		const queryClient = useQueryClient();
-		const [currentLocale, setCurrentLocale] = useState(locale || options.defaultLocale);
+		const [currentLocale, setCurrentLocale] = useState(locale);
 
 		const fetchLocale = async (_locale: keyof Locales) => {
 			if (!Object.keys(locales).includes(_locale as string)) {
@@ -39,12 +39,8 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		const { data } = useSuspenseQuery({
 			queryKey: ["locale"],
 			queryFn: async () => {
-				const _locale = await options.storedLocale.get();
-				if (Object.keys(locales).includes(_locale)) {
-					return fetchLocale(_locale);
-				}
-
-				return fetchLocale(currentLocale);
+				const _locale = currentLocale || await options.storedLocale.get();
+				return fetchLocale(_locale);
 			},
 		});
 
@@ -59,7 +55,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 			<I18nContext.Provider
 				value={{
 					dictionary: data,
-					locale: currentLocale,
+					locale: currentLocale || options.defaultLocale,
 					updateLocale: (newLocale: keyof ImportedLocales) =>
 						updateLocale(newLocale),
 				}}
