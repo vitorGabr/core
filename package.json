@@ -1,6 +1,6 @@
 {
   "name": "lingo-ts",
-  "version": "0.0.39",
+  "version": "0.0.38",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,19 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./client": {
+      "types": "./dist/create/client/index.d.ts",
+      "default": "./dist/create/client/index.js"
+    },
+    "./server": {
+      "types": "./dist/create/server/index.d.ts",
+      "default": "./dist/create/server/index.js"
+    },
+    "./default": {
+      "types": "./dist/create/default/index.d.ts",
+      "default": "./dist/create/default/index.js"
+    }
   },
   "files": [
     "dist"
@@ -29,6 +41,7 @@
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
     "vitest": "^1.3.1"
+
   },
   "dependencies": {
     "@tanstack/react-query": "^5.24.1",
