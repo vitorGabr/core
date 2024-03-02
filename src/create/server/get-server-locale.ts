@@ -1,9 +1,17 @@
-import type { ImportedLocales } from "../../types/i18n";
+import type { ImportedLocales, LocaleServerOptions } from "../../types/i18n";
 
 export const getServerLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
-	locale: string | Promise<string | null | undefined>
+	contentLocale: LocaleServerOptions<Locales> & { locale: string | null },
 ) => {
-	const content = typeof locale === "string" ? locale : await locale;
-	return (await locales[content as string]).default;
+	let locale = contentLocale.locale as any; 
+	if (!locale) {
+		locale = contentLocale.storedLocale.get();
+	}
+
+	if(Object.keys(locales).indexOf(locale) === -1) {
+		locale = contentLocale.defaultLocale;
+	}
+
+	return (await locales[locale]).default;
 };

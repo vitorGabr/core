@@ -6,26 +6,25 @@ export const createServerI18n = <Locales extends ImportedLocales>(
 	locales: Locales,
 	options: LocaleServerOptions<Locales>,
 ) => {
-	const state = {
-		locale: (options.storedLocale.get() || options.defaultLocale) as
-			| string
-			| Promise<string | null | undefined>,
-	};
+	const contentLocale = {
+		locale: null,
+		...options,
+	} as LocaleServerOptions<Locales> & { locale: string | null };
 
 	const firstLocale = Object.keys(locales)[0] as keyof Locales;
 	type FirstLocale = Locale<Locales[typeof firstLocale]>;
 
-	const getI18n = createT<Locales, FirstLocale>(locales, state);
+	const getI18n = createT<Locales, FirstLocale>(locales, contentLocale);
 	const getScopedI18n = createScopedT<Locales, FirstLocale>(
 		locales,
-		state,
+		contentLocale,
 	);
 
 	return {
 		getI18n,
 		getScopedI18n,
 		setLocale: (newLocale: string) => {
-			state.locale = newLocale;
+			contentLocale.locale = newLocale;
 		},
 	};
 };

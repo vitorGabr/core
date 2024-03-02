@@ -12,18 +12,18 @@ import {
 	retrieveScopeValueAtPath,
 	retrieveValueAtPath,
 } from "../../functions/flatten-object";
+import type { LocaleServerOptions } from "../../types/i18n";
+
 
 export function createT<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(
 	locales: Locales,
-	data: {
-		locale: string | Promise<string | null | undefined>;
-	},
+	contentLocale: LocaleServerOptions<Locales> & { locale: string | null },
 ) {
 	return async () => {
-		const content = await getServerLocale(locales, data.locale);
+		const content = await getServerLocale(locales, contentLocale);
 		return <
 			T extends DeepKeyStringUnion<CurrentLocale>,
 			V extends NestedValueByPath<CurrentLocale, T>,
@@ -44,11 +44,9 @@ export function createT<
 export function createScopedT<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
->(locales: Locales, data: {
-	locale: string | Promise<string | null | undefined>;
-},) {
+>(locales: Locales, contentLocale: LocaleServerOptions<Locales> & { locale: string | null }) {
 	return async <DP extends DeepKeyUnion<CurrentLocale>>(scope: DP) => {
-		const value = (await getServerLocale(locales, data.locale)) as Locale<
+		const value = (await getServerLocale(locales, contentLocale)) as Locale<
 			Locales[keyof Locales]
 		>;
 		return <
