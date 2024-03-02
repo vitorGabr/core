@@ -17,9 +17,9 @@ import type { LocaleServerOptions } from "../../types/i18n";
 export function createT<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
->(locales: Locales, options: LocaleServerOptions<Locales>) {
+>(locales: Locales,_locale: string) {
 	return async () => {
-		const locale = await getServerLocale(locales, options);
+		const locale = await getServerLocale(locales, _locale);
 		return <
 			T extends DeepKeyStringUnion<CurrentLocale>,
 			V extends NestedValueByPath<CurrentLocale, T>,
@@ -40,9 +40,9 @@ export function createT<
 export function createScopedT<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
->(locales: Locales, options: LocaleServerOptions<Locales>) {
+>(locales: Locales, locale: string) {
 	return async <DP extends DeepKeyUnion<CurrentLocale>>(scope: DP) => {
-		const value = (await getServerLocale(locales, options)) as Locale<
+		const value = (await getServerLocale(locales, locale)) as Locale<
 			Locales[keyof Locales]
 		>;
 		return <
