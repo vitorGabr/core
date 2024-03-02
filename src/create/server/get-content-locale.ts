@@ -1,4 +1,4 @@
-import type { ImportedLocales, LocaleServerOptions } from "../../types/i18n";
+import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
 
 /**
  * Retrieves the server locale based on the provided options.
@@ -8,7 +8,7 @@ import type { ImportedLocales, LocaleServerOptions } from "../../types/i18n";
  */
 export const getContentLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
-	contentLocale: LocaleServerOptions<Locales> & { locale: string | null },
+	contentLocale: LocaleOptions<Locales> & { locale: string | null },
 ) => {
 	let locale = "";
 
@@ -17,7 +17,7 @@ export const getContentLocale = async <Locales extends ImportedLocales>(
 	}
 
 	if (!locale) {
-		const storedLocale = contentLocale.storedLocale.get();
+		const storedLocale = contentLocale.storedLocale?.get?.();
 		if (typeof storedLocale === "string") {
 			locale = storedLocale;
 		} else if (storedLocale instanceof Promise) {

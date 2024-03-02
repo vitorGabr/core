@@ -1,6 +1,6 @@
 import { createLocalizedContentRetriever, createScopedLocalizedContentRetriever } from "./create-server-i18n";
 import type { ImportedLocales, Locale } from "../../types";
-import type { LocaleServerOptions } from "../../types/i18n";
+import type { LocaleOptions } from "../../types/i18n";
 
 /**
  * Creates an internationalization (i18n) server instance.
@@ -10,13 +10,13 @@ import type { LocaleServerOptions } from "../../types/i18n";
  */
 export const createServerI18n = <Locales extends ImportedLocales>(
     locales: Locales,
-    options: LocaleServerOptions<Locales>,
+    options: LocaleOptions<Locales>,
 ) => {
     // Merge options with default locale configuration
     const contentLocale = {
         locale: null,
         ...options,
-    } as LocaleServerOptions<Locales> & { locale: string | null };
+    } as LocaleOptions<Locales> & { locale: string | null };
 
     // Retrieve the first locale and its type
     const firstLocale = Object.keys(locales)[0] as keyof Locales;

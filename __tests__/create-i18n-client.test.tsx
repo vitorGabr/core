@@ -82,14 +82,14 @@ describe("create-i18n-client", () => {
 			);
 		});
 
-		// act(() => {
-		// 	i18nResult.current.changeLocale("en-US"); // Altera a localidade
-		// });
+		act(() => {
+			i18nResult.current.changeLocale("en-US"); // Altera a localidade
+		});
 
-		// await waitFor(() => {
-		// 	expect(i18nResult.current.i18n("globals.usert_types.admin")).toBe(
-		// 		"Admin2",
-		// 	);
-		// });
+		await waitFor(() => {
+			expect(i18nResult.current.i18n("globals.usert_types.admin")).toBe(
+				"Admin2",
+			);
+		});
 	});
 });

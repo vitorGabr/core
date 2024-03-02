@@ -12,7 +12,7 @@ import {
 	retrieveScopeValueAtPath,
 	retrieveValueAtPath,
 } from "../../functions/flatten-object";
-import type { LocaleServerOptions } from "../../types/i18n";
+import type { LocaleOptions } from "../../types/i18n";
 
 /**
  * Creates a function to retrieve localized content based on the provided locales and server locale options.
@@ -25,7 +25,7 @@ export function createLocalizedContentRetriever<
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(
 	locales: Locales,
-	contentLocale: LocaleServerOptions<Locales> & { locale: string | null },
+	contentLocale: LocaleOptions<Locales> & { locale: string | null },
 ) {
 	return async () => {
 		// Retrieve content locale asynchronously
@@ -62,7 +62,7 @@ export function createScopedLocalizedContentRetriever<
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(
 	locales: Locales,
-	contentLocale: LocaleServerOptions<Locales> & { locale: string | null },
+	contentLocale: LocaleOptions<Locales> & { locale: string | null },
 ) {
 	return async <ScopePath extends DeepKeyUnion<CurrentLocale>>(
 		scope: ScopePath,
