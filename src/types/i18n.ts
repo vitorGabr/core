@@ -1,8 +1,6 @@
-export type ImportedLocales = {
-	[K in string]: Promise<{
-		default: Record<string, unknown>;
-	}>;
-};
+export type ImportedLocales = Record<string,Promise<{
+	default: Record<string, unknown>;
+}>>;
 
 export type Locale<T extends ImportedLocales[keyof ImportedLocales]> =
 	T extends Promise<infer R>
@@ -16,7 +14,7 @@ export type Locale<T extends ImportedLocales[keyof ImportedLocales]> =
 export type LocaleOptions<T extends Record<string, unknown>> = {
 	defaultLocale: keyof T;
 	storedLocale: {
-		get: () => string | Promise<string | null | undefined> | null | undefined;
+		get: () => (string | Promise<string | null | undefined> | null | undefined);
 		set: (locale: string) => Promise<void>;
 	};
 };

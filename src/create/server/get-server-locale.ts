@@ -1,8 +1,9 @@
-import type { ImportedLocales} from "../../types/i18n";
+import type { ImportedLocales } from "../../types/i18n";
 
 export const getServerLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
-	locale: string,
+	locale: string | Promise<string | null | undefined>
 ) => {
-	return (await locales[locale as string]).default;
+	const content = typeof locale === "string" ? locale : await locale;
+	return (await locales[content as string]).default;
 };

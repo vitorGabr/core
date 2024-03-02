@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { createServerI18n } from "../src/create/server/index";
 
 describe("create-i18n-server", () => {
-	const { getI18n, getScopedI18n } = createServerI18n(
+	const { getI18n, getScopedI18n,setLocale } = createServerI18n(
 		{
 			"pt-BR": import("./utils/pt-br"),
 			"en-US": import("./utils/pt-br"),
@@ -10,11 +10,10 @@ describe("create-i18n-server", () => {
 		{
 			defaultLocale: "pt-BR",
 			storedLocale: {
-				get: ()=>"pt-BR",
+				get: () => "pt-BR",
 			},
 		},
 	);
-
 	test("it translate function work", async () => {
 		const t = await getI18n();
 		const a = t("globals.usert_types.admin");
