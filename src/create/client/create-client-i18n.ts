@@ -4,7 +4,6 @@ import type {
 	FlattenedValueByPath,
 	ImportedLocales,
 	Locale,
-	LocaleOptions,
 	NestedValueByPath,
 	StringParameters,
 } from "../../types";
@@ -16,19 +15,25 @@ import type { Context } from "react";
 import type { LocaleContextType } from "./create-i18n-provider";
 import { useLocaleContext } from "./use-locale-contex";
 
-export function createT<
+/**
+ * Creates a function to retrieve localized content based on the provided context.
+ * @param {Context<LocaleContextType<Locales> | null>} I18nContext - React context for the locale.
+ * @returns {Function} A function to retrieve localized content.
+ */
+export function createLocalizedContentRetriever<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(I18nContext: Context<LocaleContextType<Locales> | null>) {
 	return () => {
 		const { dictionary } = useLocaleContext(I18nContext);
+
 		return <
-			T extends DeepKeyStringUnion<CurrentLocale>,
-			V extends NestedValueByPath<CurrentLocale, T>,
-			S extends StringParameters<V extends string ? V : "">,
+			Key extends DeepKeyStringUnion<CurrentLocale>,
+			Value extends NestedValueByPath<CurrentLocale, Key>,
+			Params extends StringParameters<Value extends string ? Value : "">,
 		>(
-			key: T,
-			params?: S,
+			key: Key,
+			params?: Params,
 		) => {
 			return retrieveValueAtPath({
 				obj: dictionary,
@@ -39,19 +44,25 @@ export function createT<
 	};
 }
 
-export function createScopedT<
+/**
+ * Creates a scoped function to retrieve localized content based on the provided context and scope.
+ * @param {Context<LocaleContextType<Locales> | null>} I18nContext - React context for the locale.
+ * @returns {Function} A scoped function to retrieve localized content.
+ */
+export function createScopedLocalizedContentRetriever<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(I18nContext: Context<LocaleContextType<Locales> | null>) {
-	return <DP extends DeepKeyUnion<CurrentLocale>>(scope: DP) => {
+	return <Scope extends DeepKeyUnion<CurrentLocale>>(scope: Scope) => {
 		const { dictionary } = useLocaleContext(I18nContext);
+
 		return <
-			T extends FlattenedValueByPath<CurrentLocale, DP>,
-			V extends NestedValueByPath<CurrentLocale, T>,
-			S extends StringParameters<V extends string ? V : "">,
+			Key extends FlattenedValueByPath<CurrentLocale, Scope>,
+			Value extends NestedValueByPath<CurrentLocale, Key>,
+			Params extends StringParameters<Value extends string ? Value : "">,
 		>(
-			key: T,
-			params?: S,
+			key: Key,
+			params?: Params,
 		) => {
 			return retrieveScopeValueAtPath({
 				obj: dictionary as CurrentLocale,

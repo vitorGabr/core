@@ -1,4 +1,4 @@
-import { getServerLocale } from "./get-server-locale";
+import { getContentLocale } from "./get-content-locale";
 import type {
 	DeepKeyStringUnion,
 	DeepKeyUnion,
@@ -14,8 +14,13 @@ import {
 } from "../../functions/flatten-object";
 import type { LocaleServerOptions } from "../../types/i18n";
 
-
-export function createT<
+/**
+ * Creates a function to retrieve localized content based on the provided locales and server locale options.
+ * @param {ImportedLocales} locales - An object containing promises of imported locales.
+ * @param {LocaleServerOptions<Locales> & { locale: string | null }} contentLocale - Server locale options, including the current locale and locale options.
+ * @returns {Promise<Function>} An asynchronous function to retrieve localized content.
+ */
+export function createLocalizedContentRetriever<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(
@@ -23,15 +28,20 @@ export function createT<
 	contentLocale: LocaleServerOptions<Locales> & { locale: string | null },
 ) {
 	return async () => {
-		const content = await getServerLocale(locales, contentLocale);
+		// Retrieve content locale asynchronously
+		const content = await getContentLocale(locales, contentLocale);
+
 		return <
-			T extends DeepKeyStringUnion<CurrentLocale>,
-			V extends NestedValueByPath<CurrentLocale, T>,
-			S extends StringParameters<V extends string ? V : "">,
+			LocaleKey extends DeepKeyStringUnion<CurrentLocale>,
+			LocaleValue extends NestedValueByPath<CurrentLocale, LocaleKey>,
+			Parameters extends StringParameters<
+				LocaleValue extends string ? LocaleValue : ""
+			>,
 		>(
-			key: T,
-			params?: S,
+			key: LocaleKey,
+			params?: Parameters,
 		) => {
+			// Retrieve value at the specified path in the content
 			return retrieveValueAtPath({
 				obj: content,
 				path: key,
@@ -41,22 +51,38 @@ export function createT<
 	};
 }
 
-export function createScopedT<
+/**
+ * Creates a scoped function to retrieve localized content based on the provided locales, server locale options, and scope.
+ * @param {ImportedLocales} locales - An object containing promises of imported locales.
+ * @param {LocaleServerOptions<Locales> & { locale: string | null }} contentLocale - Server locale options, including the current locale and locale options.
+ * @returns {Promise<Function>} An asynchronous function to retrieve scoped localized content.
+ */
+export function createScopedLocalizedContentRetriever<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
->(locales: Locales, contentLocale: LocaleServerOptions<Locales> & { locale: string | null }) {
-	return async <DP extends DeepKeyUnion<CurrentLocale>>(scope: DP) => {
-		const value = (await getServerLocale(locales, contentLocale)) as Locale<
+>(
+	locales: Locales,
+	contentLocale: LocaleServerOptions<Locales> & { locale: string | null },
+) {
+	return async <ScopePath extends DeepKeyUnion<CurrentLocale>>(
+		scope: ScopePath,
+	) => {
+		// Retrieve content locale asynchronously and cast it to the appropriate type
+		const value = (await getContentLocale(locales, contentLocale)) as Locale<
 			Locales[keyof Locales]
 		>;
+
 		return <
-			T extends FlattenedValueByPath<CurrentLocale, DP>,
-			V extends NestedValueByPath<CurrentLocale, T>,
-			S extends StringParameters<V extends string ? V : "">,
+			ScopedKey extends FlattenedValueByPath<CurrentLocale, ScopePath>,
+			ScopedValue extends NestedValueByPath<CurrentLocale, ScopedKey>,
+			Parameters extends StringParameters<
+				ScopedValue extends string ? ScopedValue : ""
+			>,
 		>(
-			key: T,
-			params?: S,
+			key: ScopedKey,
+			params?: Parameters,
 		) => {
+			// Retrieve scoped value at the specified path in the content
 			return retrieveScopeValueAtPath({
 				obj: value,
 				scope,

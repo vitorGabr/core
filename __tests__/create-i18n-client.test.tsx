@@ -54,6 +54,7 @@ describe("create-i18n-client", () => {
 		});
 
 		act(() => {
+			// @ts-ignore
 			i18nResult.current.changeLocale('en-USa')
 		})
 

@@ -1,24 +1,28 @@
-import type {
-	DeepKeyStringUnion,
-	DeepKeyUnion,
-	FlattenedValueByPath,
-} from "../../types";
+import type { DeepKeyStringUnion, DeepKeyUnion, FlattenedValueByPath } from "../../types";
 import type { ImportedLocales, Locale } from "../../types/i18n";
 
+/**
+ * Creates a default i18n instance.
+ * @param {ImportedLocales} locales - An object containing promises of imported locales.
+ * @returns {Object} An object containing functions for simple key-value translations.
+ */
 export const createDefaultI18n = <Locales extends ImportedLocales>(
-	locales: Locales,
+    locales: Locales,
 ) => {
-	const firstLocale = Object.keys(locales)[0] as keyof Locales;
-	type FirstLocale = Locale<Locales[typeof firstLocale]>;
+    // Retrieve the first locale and its type
+    const firstLocaleKey = Object.keys(locales)[0] as keyof Locales;
+    type FirstLocaleType = Locale<Locales[typeof firstLocaleKey]>;
 
-	return {
-		t: (key: DeepKeyStringUnion<FirstLocale>) => {
-			return key;
-		},
-		scopedT: <DP extends DeepKeyUnion<FirstLocale>>(scope: DP) => {
-			return (key: FlattenedValueByPath<FirstLocale, DP>) => {
-				return `${scope}.${key}`;
-			};
-		},
-	};
+    return {
+        // Return a simple translation function
+        t: (key: DeepKeyStringUnion<FirstLocaleType>) => {
+            return key;
+        },
+        // Return a scoped translation function
+        scopedT: <Scope extends DeepKeyUnion<FirstLocaleType>>(scope: Scope) => {
+            return (key: FlattenedValueByPath<FirstLocaleType, Scope>) => {
+                return `${scope}.${key}`;
+            };
+        },
+    };
 };

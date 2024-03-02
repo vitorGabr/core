@@ -1,4 +1,4 @@
-import { Suspense, useState, type Context } from "react";
+import { Suspense, useState } from "react";
 import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
 import {
 	QueryClient,
@@ -10,17 +10,25 @@ import {
 export type LocaleContextType<T extends Record<string, unknown>> = {
 	dictionary: Record<string, unknown>;
 	locale: keyof T;
-	updateLocale: (locale: string) => void;
+	updateLocale: (locale: keyof T) => void;
 };
 
+/**
+ * Creates an i18n provider.
+ * @param {Object} props - Props for creating the i18n provider.
+ * @param {Locales} props.locales - An object containing promises of imported locales.
+ * @param {LocaleOptions<Locales>} props.options - Options for the i18n provider, including locale and other configurations.
+ * @param {Context<LocaleContextType<Locales> | null>} props.I18nContext - React context for the locale.
+ * @returns {Function} A wrapped locale provider component.
+ */
 export function createI18nProvider<Locales extends ImportedLocales>({
 	locales,
-	I18nContext,
 	options,
+	I18nContext,
 }: {
 	locales: Locales;
 	options: LocaleOptions<Locales>;
-	I18nContext: Context<LocaleContextType<Locales> | null>;
+	I18nContext: React.Context<LocaleContextType<Locales> | null>;
 }) {
 	function LocaleProvider({
 		children,
@@ -30,7 +38,9 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 	}) {
 		const queryClient = useQueryClient();
-		const [currentLocale, setCurrentLocale] = useState(locale);
+		const [currentLocale, setCurrentLocale] = useState<
+			keyof Locales | undefined
+		>(locale);
 
 		const fetchLocale = async (_locale: keyof Locales | null | undefined) => {
 			if (!Object.keys(locales).includes(_locale as string)) {
@@ -42,8 +52,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		const { data } = useSuspenseQuery({
 			queryKey: ["locale"],
 			queryFn: async () => {
-				const locale =
-					currentLocale || await options.storedLocale.get();;
+				const locale = currentLocale || (await options.storedLocale.get());
 				return fetchLocale(locale);
 			},
 		});
@@ -58,10 +67,9 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		return (
 			<I18nContext.Provider
 				value={{
-					dictionary: data,
+					dictionary: data || {},
 					locale: currentLocale || options.defaultLocale,
-					updateLocale: (newLocale: keyof ImportedLocales) =>
-						updateLocale(newLocale),
+					updateLocale: (newLocale: keyof Locales) => updateLocale(newLocale),
 				}}
 			>
 				{children}
@@ -77,7 +85,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 
 		return (
 			<QueryClientProvider client={queryClient}>
-				<Suspense>
+				<Suspense fallback={null}>
 					<LocaleProvider {...props} />
 				</Suspense>
 			</QueryClientProvider>

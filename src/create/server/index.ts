@@ -1,30 +1,40 @@
-import { createScopedT, createT } from "./create-server-i18n";
+import { createLocalizedContentRetriever, createScopedLocalizedContentRetriever } from "./create-server-i18n";
 import type { ImportedLocales, Locale } from "../../types";
 import type { LocaleServerOptions } from "../../types/i18n";
 
+/**
+ * Creates an internationalization (i18n) server instance.
+ * @param {ImportedLocales} locales - An object containing promises of imported locales.
+ * @param {LocaleServerOptions<Locales>} options - Options for the i18n server, including locale and other configurations.
+ * @returns {Object} An object containing functions to retrieve localized content and set the current locale.
+ */
 export const createServerI18n = <Locales extends ImportedLocales>(
-	locales: Locales,
-	options: LocaleServerOptions<Locales>,
+    locales: Locales,
+    options: LocaleServerOptions<Locales>,
 ) => {
-	const contentLocale = {
-		locale: null,
-		...options,
-	} as LocaleServerOptions<Locales> & { locale: string | null };
+    // Merge options with default locale configuration
+    const contentLocale = {
+        locale: null,
+        ...options,
+    } as LocaleServerOptions<Locales> & { locale: string | null };
 
-	const firstLocale = Object.keys(locales)[0] as keyof Locales;
-	type FirstLocale = Locale<Locales[typeof firstLocale]>;
+    // Retrieve the first locale and its type
+    const firstLocale = Object.keys(locales)[0] as keyof Locales;
+    type FirstLocale = Locale<Locales[typeof firstLocale]>;
 
-	const getI18n = createT<Locales, FirstLocale>(locales, contentLocale);
-	const getScopedI18n = createScopedT<Locales, FirstLocale>(
-		locales,
-		contentLocale,
-	);
+    // Create functions to retrieve localized content
+    const getI18n = createLocalizedContentRetriever<Locales, FirstLocale>(locales, contentLocale);
+    const getScopedI18n = createScopedLocalizedContentRetriever<Locales, FirstLocale>(
+        locales,
+        contentLocale,
+    );
 
-	return {
-		getI18n,
-		getScopedI18n,
-		setLocale: (newLocale: string) => {
-			contentLocale.locale = newLocale;
-		},
-	};
+    return {
+        // Return the functions and an initialization function to set the locale
+        getI18n,
+        getScopedI18n,
+        initLocale: (locale: string) => {
+            contentLocale.locale = locale;
+        },
+    };
 };
