@@ -16,19 +16,13 @@ export function server<
 	type ScopedLocale = DeepKeyUnion<FirstLocale>;
 
 	const getI18n = async () => {
-		const contentLocale = await getContentLocale(locales, {
-			...options,
-			locale,
-		});
+		const contentLocale = await getContentLocale(locales,options);
 		return createT<FirstLocale>(contentLocale);
 	};
 	const getScopedI18n = async <ScopePath extends ScopedLocale>(
 		scope: ScopePath,
 	) => {
-		const contentLocale = await getContentLocale(locales, {
-			...options,
-			locale,
-		});
+		const contentLocale = await getContentLocale(locales, options);
 		return createScopedT<FirstLocale, ScopePath>(contentLocale, scope);
 	};
 
