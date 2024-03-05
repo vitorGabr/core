@@ -6,7 +6,7 @@ export const getContentLocale = async <Locales extends ImportedLocales>(
 ) => {
 	let locale = contentLocale.locale as string | null | undefined;
 
-	if (locale == null) {
+	if (!locale) {
 		const storedLocale = contentLocale.persistentLocale?.get?.();
 		if (typeof storedLocale === "string") {
 			locale = storedLocale;
