@@ -9,16 +9,12 @@
     "url": "git+https://github.com/vitorGabr/lingo-ts"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
     "./package.json": "./package.json",
-    "/client": {
+    "./client": {
       "types": "./dist/client/index.d.ts",
       "default": "./dist/client/index.js"
     },
-    "/server": {
+    "./server": {
       "types": "./dist/server/index.d.ts",
       "default": "./dist/server/index.js"
     }
