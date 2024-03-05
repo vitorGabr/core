@@ -15,7 +15,6 @@ export function server<
 
 	type ScopedLocale = DeepKeyUnion<FirstLocale>;
 
-	// Create server-side i18n functions
 	const getI18n = async () => {
 		const contentLocale = await getContentLocale(locales, {
 			...options,
