@@ -13,19 +13,7 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./package.json": "./package.json",
-    "./client": {
-      "types": "./dist/create/client/index.d.ts",
-      "default": "./dist/create/client/index.js"
-    },
-    "./server": {
-      "types": "./dist/create/server/index.d.ts",
-      "default": "./dist/create/server/index.js"
-    },
-    "./default": {
-      "types": "./dist/create/default/index.d.ts",
-      "default": "./dist/create/default/index.js"
-    }
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"

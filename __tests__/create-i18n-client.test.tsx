@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { createI18n } from "../src/server";
+import { createI18n } from "../src/create";
 import { Suspense } from "react";
 
 describe("create-i18n-client", () => {

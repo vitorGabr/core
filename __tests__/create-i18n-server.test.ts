@@ -1,10 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { createI18n } from "../src/create/server/index";
+import { createI18n } from "../src/create";
 
 describe("create-i18n-server", () => {
 	const {
 		server: { getI18n,getScopedI18n },
-		useI18n,
 	} = createI18n(
 		{
 			"pt-BR": import("./utils/pt-br"),
