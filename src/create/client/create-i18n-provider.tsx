@@ -1,14 +1,13 @@
-import { Suspense, useState } from "react";
 import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
 import {
 	QueryClient,
 	QueryClientProvider,
+	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 
 export type LocaleContextType<T extends Record<string, unknown>> = {
 	dictionary: Record<string, unknown>;
-	locale: keyof T;
 	updateLocale: (locale: keyof T) => void;
 };
 
@@ -38,35 +37,31 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		locale?: keyof Locales;
 		children: React.ReactNode;
 	}) {
-		const [currentLocale, setCurrentLocale] = useState<
-			keyof Locales | undefined
-		>(locale);
 
-		const fetchLocale = async (_locale: keyof Locales | null | undefined) => {
-			if (!Object.keys(locales).includes(_locale as string)) {
-				return (await locales[options.defaultLocale]).default;
-			}
-			return (await locales[_locale as string]).default;
-		};
+		const queryClient = useQueryClient();
 
 		const { data } = useSuspenseQuery({
-			queryKey: [QUERY_KEY, { currentLocale }],
+			queryKey: [QUERY_KEY],
 			queryFn: async () => {
-				const locale = currentLocale || (await options.storedLocale?.get?.());
-				return fetchLocale(locale);
+				const _locale = locale || (await options.storedLocale?.get?.());
+				if (!Object.keys(locales).includes(_locale as string)) {
+					return (await locales[options.defaultLocale]).default;
+				}
+				return (await locales[_locale as string]).default;
 			},
 		});
 
 		const updateLocale = async (newLocale: keyof Locales) => {
 			options.storedLocale?.set?.(newLocale as string);
-			setCurrentLocale(newLocale);
+			queryClient.invalidateQueries({
+				queryKey: [QUERY_KEY],
+			})
 		};
 
 		return (
 			<I18nContext.Provider
 				value={{
 					dictionary: data || {},
-					locale: currentLocale || options.defaultLocale,
 					updateLocale: (newLocale: keyof Locales) => updateLocale(newLocale),
 				}}
 			>
@@ -80,12 +75,20 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 	}) {
 		const queryClient = new QueryClient();
+		queryClient.prefetchQuery({
+			queryKey: [QUERY_KEY],
+			queryFn: async () => {
+				const _locale = props.locale || (await options.storedLocale?.get?.());
+				if (!Object.keys(locales).includes(_locale as string)) {
+					return (await locales[options.defaultLocale]).default;
+				}
+				return (await locales[_locale as string]).default;
+			}
+		})
 
 		return (
 			<QueryClientProvider client={queryClient}>
-				<Suspense fallback={null}>
-					<LocaleProvider {...props} />
-				</Suspense>
+				{props.children}
 			</QueryClientProvider>
 		);
 	};

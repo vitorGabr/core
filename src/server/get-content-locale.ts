@@ -1,4 +1,4 @@
-import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
+import type { ImportedLocales, LocaleOptions } from "../types/i18n";
 
 export const getContentLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,

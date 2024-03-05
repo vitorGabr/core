@@ -20,7 +20,7 @@ import { useLocaleContext } from "./use-locale-contex";
  * @param {Context<LocaleContextType<Locales> | null>} I18nContext - React context for the locale.
  * @returns {Function} A function to retrieve localized content.
  */
-export function createLocalizedContentRetriever<
+export function createT<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(I18nContext: Context<LocaleContextType<Locales> | null>) {
@@ -49,7 +49,7 @@ export function createLocalizedContentRetriever<
  * @param {Context<LocaleContextType<Locales> | null>} I18nContext - React context for the locale.
  * @returns {Function} A scoped function to retrieve localized content.
  */
-export function createScopedLocalizedContentRetriever<
+export function createScopedT<
 	Locales extends ImportedLocales,
 	CurrentLocale extends Locale<Locales[keyof Locales]>,
 >(I18nContext: Context<LocaleContextType<Locales> | null>) {

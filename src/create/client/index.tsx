@@ -7,8 +7,8 @@ import { createContext } from "react";
 import type { LocaleContextType } from "./create-i18n-provider";
 import { useLocaleContext } from "./use-locale-contex";
 import {
-	createLocalizedContentRetriever,
-	createScopedLocalizedContentRetriever,
+	createT,
+	createScopedT,
 } from "./create-client-i18n";
 
 export const createClientI18n = <Locales extends ImportedLocales>(
@@ -17,32 +17,28 @@ export const createClientI18n = <Locales extends ImportedLocales>(
 ) => {
 	const firstLocale = Object.keys(locales)[0] as keyof Locales;
 	type FirstLocale = Locale<Locales[typeof firstLocale]>;
-	const LocaleContext = createContext<LocaleContextType<Locales> | null>(null);
 
-	const useI18n = createLocalizedContentRetriever<Locales, FirstLocale>(
+	const LocaleContext = createContext<LocaleContextType<Locales> | null>(null);
+	const useI18n = createT<Locales, FirstLocale>(
 		LocaleContext,
 	);
-	const useScopedI18n = createScopedLocalizedContentRetriever<
+	const useScopedI18n = createScopedT<
 		Locales,
 		FirstLocale
 	>(LocaleContext);
-	const createProvider = createI18nProvider({
+	const Provider = createI18nProvider({
 		locales,
 		options,
 		I18nContext: LocaleContext,
 	});
 
 	return {
-		Provider: createProvider,
+		Provider,
 		useI18n,
 		useScopedI18n,
 		useChangeLocale: () => {
 			const { updateLocale } = useLocaleContext(LocaleContext);
 			return updateLocale;
-		},
-		useGetLocale: () => {
-			const { locale } = useLocaleContext(LocaleContext);
-			return locale;
 		},
 	};
 };
