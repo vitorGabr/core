@@ -7,8 +7,8 @@ describe("create-i18n-client", () => {
 		useI18n,useScopedI18n,useChangeLocale, I18nProvider: Provider,
 	} = createClientI18n(
 		{
-			"pt-BR": import("./utils/pt-br"),
-			"en-US": import("./utils/en"),
+			"pt-BR": () => import("./utils/pt-br"),
+			"en-US": () => import("./utils/en"),
 		},
 		{
 			defaultLocale: "pt-BR",

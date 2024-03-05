@@ -1,9 +1,9 @@
-export type ImportedLocales = Record<string,Promise<{
+export type ImportedLocales = Record<string,()=>Promise<{
 	default: Record<string, unknown>;
 }>>;
 
 export type Locale<T extends ImportedLocales[keyof ImportedLocales]> =
-	T extends Promise<infer R>
+	T extends () => Promise<infer R>
 		? R extends { default: infer T }
 			? T extends Record<string, unknown>
 				? T

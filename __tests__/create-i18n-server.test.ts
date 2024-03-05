@@ -6,8 +6,8 @@ describe("create-i18n-server", () => {
 		getI18n,getScopedI18n,
 	} = createServerI18n(
 		{
-			"pt-BR": import("./utils/pt-br"),
-			"en-US": import("./utils/en"),
+			"pt-BR": ()=> import("./utils/pt-br"),
+			"en-US": ()=>import("./utils/en"),
 		},
 		{
 			defaultLocale: "pt-BR",

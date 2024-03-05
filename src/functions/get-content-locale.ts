@@ -27,5 +27,5 @@ export const getContentLocale = async <Locales extends ImportedLocales>(
 		locale = contentLocale.defaultLocale;
 	}
 
-	return (await locales[locale]).default;
+	return (await locales[locale]()).default;
 };
