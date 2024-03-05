@@ -1,22 +1,23 @@
 import { describe, expect, test } from "vitest";
-import { act,  renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { createClientI18n } from "../src/create/client";
 
 describe("create-i18n-client", () => {
-	const { useI18n, useScopedI18n, Provider, useChangeLocale } =
-		createClientI18n(
-			{
-				"pt-BR": import("./utils/pt-br"),
-				"en-US": import("./utils/en"),
+	const {
+		useI18n,useScopedI18n,useChangeLocale, I18nProvider: Provider,
+	} = createClientI18n(
+		{
+			"pt-BR": () => import("./utils/pt-br"),
+			"en-US": () => import("./utils/en"),
+		},
+		{
+			defaultLocale: "pt-BR",
+			persistentLocale: {
+				get: () => "pt-BR",
+				set: () => Promise.resolve(),
 			},
-			{
-				defaultLocale: "pt-BR",
-				storedLocale: {
-					get: ()=>'pt-BR',
-					set: async (locale) => {},
-				},
-			},
-		);
+		},
+	);
 
 	test("it translate function work", async () => {
 		const { result } = renderHook(() => useI18n(), {

@@ -1,40 +1,43 @@
-import { createLocalizedContentRetriever, createScopedLocalizedContentRetriever } from "./create-server-i18n";
-import type { ImportedLocales, Locale } from "../../types";
-import type { LocaleOptions } from "../../types/i18n";
+import type {
+	DeepKeyUnion,
+	ImportedLocales,
+	Locale,
+	LocaleOptions,
+} from "../../types";
+import { getContentLocale } from "../../helpers";
+import { createScopedT,createT } from "../../common";
 
-/**
- * Creates an internationalization (i18n) server instance.
- * @param {ImportedLocales} locales - An object containing promises of imported locales.
- * @param {LocaleServerOptions<Locales>} options - Options for the i18n server, including locale and other configurations.
- * @returns {Object} An object containing functions to retrieve localized content and set the current locale.
- */
-export const createServerI18n = <Locales extends ImportedLocales>(
-    locales: Locales,
-    options: LocaleOptions<Locales>,
-) => {
-    // Merge options with default locale configuration
-    const contentLocale = {
-        locale: null,
-        ...options,
-    } as LocaleOptions<Locales> & { locale: string | null };
+export function createServerI18n<
+	Locales extends ImportedLocales,
+	FirstLocale extends Locale<Locales[keyof Locales]>,
+>(locales: Locales, options: LocaleOptions<Locales>) {
 
-    // Retrieve the first locale and its type
-    const firstLocale = Object.keys(locales)[0] as keyof Locales;
-    type FirstLocale = Locale<Locales[typeof firstLocale]>;
+	let locale = null as string | null;
 
-    // Create functions to retrieve localized content
-    const getI18n = createLocalizedContentRetriever<Locales, FirstLocale>(locales, contentLocale);
-    const getScopedI18n = createScopedLocalizedContentRetriever<Locales, FirstLocale>(
-        locales,
-        contentLocale,
-    );
+	type ScopedLocale = DeepKeyUnion<FirstLocale>;
 
-    return {
-        // Return the functions and an initialization function to set the locale
-        getI18n,
-        getScopedI18n,
-        initLocale: (locale: string) => {
-            contentLocale.locale = locale;
-        },
-    };
-};
+	const getI18n = async () => {
+		const contentLocale = await getContentLocale(locales, {
+			...options,
+			locale,
+		});
+		return createT<FirstLocale>(contentLocale);
+	};
+	const getScopedI18n = async <ScopePath extends ScopedLocale>(
+		scope: ScopePath,
+	) => {
+		const contentLocale = await getContentLocale(locales, {
+			...options,
+			locale,
+		});
+		return createScopedT<FirstLocale, ScopePath>(contentLocale, scope);
+	};
+
+	return {
+		getI18n,
+		getScopedI18n,
+		initLocale: (newLocale: string) => {
+			locale = newLocale;
+		},
+	};
+}

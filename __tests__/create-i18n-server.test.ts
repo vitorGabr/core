@@ -1,15 +1,17 @@
 import { describe, expect, test } from "vitest";
-import { createServerI18n } from "../src/create/server/index";
+import { createServerI18n } from "../src/create/server";
 
 describe("create-i18n-server", () => {
-	const { getI18n, getScopedI18n } = createServerI18n(
+	const {
+		getI18n,getScopedI18n,
+	} = createServerI18n(
 		{
-			"pt-BR": import("./utils/pt-br"),
-			"en-US": import("./utils/en"),
+			"pt-BR": ()=> import("./utils/pt-br"),
+			"en-US": ()=>import("./utils/en"),
 		},
 		{
 			defaultLocale: "pt-BR",
-			storedLocale: {
+			persistentLocale: {
 				get: () => "pt-BR",
 			},
 		},

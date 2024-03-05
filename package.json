@@ -1,6 +1,6 @@
 {
   "name": "lingo-ts",
-  "version": "0.0.52",
+  "version": "0.0.62",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,22 +9,18 @@
     "url": "git+https://github.com/vitorGabr/lingo-ts"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
     "./package.json": "./package.json",
     "./client": {
-      "types": "./dist/create/client/index.d.ts",
-      "default": "./dist/create/client/index.js"
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
     },
     "./server": {
-      "types": "./dist/create/server/index.d.ts",
-      "default": "./dist/create/server/index.js"
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
     },
     "./default": {
-      "types": "./dist/create/default/index.d.ts",
-      "default": "./dist/create/default/index.js"
+      "types": "./dist/default/index.d.ts",
+      "default": "./dist/default/index.js"
     }
   },
   "files": [
