@@ -8,7 +8,7 @@ import {
 
 export type LocaleContextType<T extends Record<string, unknown>> = {
 	dictionary: Record<string, unknown>;
-	locale: keyof T;
+	locale: keyof T | string;
 	updateLocale: (locale: keyof T) => void;
 };
 
