@@ -14,9 +14,15 @@ describe("create-i18n-client", () => {
 		},
 		{
 			defaultLocale: "pt-BR",
-			storedLocale: {
-				get: () => "pt-BR",
-				set: async (locale) => {},
+			persistentLocale: {
+				server: {
+					get: () => "pt-BR",
+					set: () => Promise.resolve(),
+				},
+				client: {
+					get: () => "pt-BR",
+					set: () => Promise.resolve(),
+				},
 			},
 		},
 	);

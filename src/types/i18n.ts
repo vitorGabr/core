@@ -11,10 +11,15 @@ export type Locale<T extends ImportedLocales[keyof ImportedLocales]> =
 			: never
 		: never;
 
+type PersistLocale = {
+	get?: () => (string | Promise<string | null | undefined> | null | undefined);
+	set?: (locale: string) => Promise<void>;
+}
+
 export type LocaleOptions<T extends ImportedLocales, K extends keyof T = keyof T> = {
 	defaultLocale: Extract<K, string>;
-	storedLocale?: {
-		get?: () => (string | Promise<string | null | undefined> | null | undefined);
-		set?: (locale: string) => Promise<void>;
-	};
+	persistentLocale?: {
+		server: PersistLocale,
+		client: PersistLocale,
+	} | PersistLocale;
 };
