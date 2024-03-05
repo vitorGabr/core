@@ -11,7 +11,8 @@ export function server<
 	Locales extends ImportedLocales,
 	FirstLocale extends Locale<Locales[keyof Locales]>,
 >(locales: Locales, options: LocaleOptions<Locales>) {
-	let locale = null as keyof Locales | null | undefined;
+
+	let locale = null as string | null;
 
 	type ScopedLocale = DeepKeyUnion<FirstLocale>;
 
@@ -36,7 +37,7 @@ export function server<
 		getI18n,
 		getScopedI18n,
 		initLocale: (_locale: keyof Locales) => {
-			locale = _locale;
+			locale = _locale as string | null;
 		},
 	};
 }

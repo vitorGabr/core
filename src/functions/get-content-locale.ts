@@ -2,9 +2,13 @@ import type { ImportedLocales, LocaleOptions } from "../types/i18n";
 
 export const getContentLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
-	contentLocale: LocaleOptions<Locales> & { locale?: keyof Locales | null },
+	contentLocale: LocaleOptions<Locales> & { locale: string | null },
 ) => {
-	let locale = contentLocale.locale as string | null | undefined;
+	let locale = "";
+
+	if (contentLocale.locale) {
+		locale = contentLocale.locale;
+	}
 
 	if (!locale) {
 		const storedLocale = contentLocale.persistentLocale?.get?.();
@@ -12,16 +16,17 @@ export const getContentLocale = async <Locales extends ImportedLocales>(
 			locale = storedLocale;
 		} else if (storedLocale instanceof Promise) {
 			try {
-				locale = (await storedLocale) ?? "";
+				locale = await storedLocale ?? "";
 			} catch (error) {
 				console.error("Erro ao obter locale da promessa:", error);
 			}
 		}
 	}
 
-	if (!((locale ?? '') in locales)) {
+	if (!(locale in locales)) {
+		console.warn(`O locale '${locale}' não está disponível. Usando o locale padrão.`);
 		locale = contentLocale.defaultLocale;
 	}
 
-	return (await locales[locale as string]).default;
+	return (await locales[locale]).default;
 };
