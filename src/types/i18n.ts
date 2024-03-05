@@ -13,6 +13,7 @@ export type Locale<T extends ImportedLocales[keyof ImportedLocales]> =
 
 
 export type LocaleOptions<T extends ImportedLocales, K extends keyof T = keyof T> = {
+	locale?: string | null;
 	defaultLocale: Extract<K, string>;
 	persistentLocale?: {
 		get?: () => (string | Promise<string | null | undefined> | null | undefined);

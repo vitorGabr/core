@@ -2,7 +2,7 @@ import type { ImportedLocales, LocaleOptions } from "../types/i18n";
 
 export const getContentLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
-	contentLocale: LocaleOptions<Locales> & { locale: string | null },
+	contentLocale: LocaleOptions<Locales>,
 ) => {
 	let locale = "";
 
