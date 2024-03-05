@@ -36,8 +36,8 @@ import { createServerI18n } from "lingo-ts/server";
 
 // Defina seus locais
 const locales = {
-    "pt-BR": import("./pt-br"),
-    "en-US": import("./en"),
+    "pt-BR": () => import("./pt-br"),
+    "en-US": () => import("./en"),
 };
 
 // Crie uma instância de internacionalização do lado do servidor
@@ -62,23 +62,17 @@ import { getCookie, setCookie } from "./cookies";
 
 // Defina seus locais
 const locales = {
-    "pt-BR": import("./pt-br"),
-    "en-US": import("./en"),
+    "pt-BR": () => import("./pt-br"),
+    "en-US": () => import("./en"),
 };
 
 // Crie uma instância de internacionalização do lado do cliente
 const {
     useI18n,
     useChangeLocale,
-    Provider
+    I18nProvider
 } = createClientI18n(locales, {
     defaultLocale: "pt-BR",
-    storedLocale: {
-        get: async () => await getCookie(),
-        set: async (locale) => {
-            setCookie(locale);
-        },
-    },
 });
 ```
 
