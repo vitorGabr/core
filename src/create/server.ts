@@ -4,50 +4,40 @@ import type {
 	Locale,
 	LocaleOptions,
 } from "../types";
-import { createT, createScopedT } from "./create-i18n";
-import { getContentLocale } from "./get-content-locale";
+import { createT, createScopedT } from "../functions/create-i18n";
+import { getContentLocale } from "../functions/get-content-locale";
 
 export function server<
 	Locales extends ImportedLocales,
 	FirstLocale extends Locale<Locales[keyof Locales]>,
 >(locales: Locales, options: LocaleOptions<Locales>) {
-
-	const localeOptions = {
-		...options,
-		locale: null,
-	} as LocaleOptions<Locales> & { locale: keyof Locales | null };
+	let locale = null as keyof Locales | null | undefined;
 
 	type ScopedLocale = DeepKeyUnion<FirstLocale>;
 
 	// Create server-side i18n functions
 	const getI18n = async () => {
-		const _options = {
+		const contentLocale = await getContentLocale(locales, {
 			...options,
-		}
-		if(_options.persistentLocale && 'server' in _options.persistentLocale){
-			_options.persistentLocale = _options.persistentLocale.server;
-		}
-		const contentLocale = await getContentLocale(locales, _options);
+			locale,
+		});
 		return createT<FirstLocale>(contentLocale);
 	};
 	const getScopedI18n = async <ScopePath extends ScopedLocale>(
 		scope: ScopePath,
 	) => {
-		const _options = {
+		const contentLocale = await getContentLocale(locales, {
 			...options,
-		}
-		if(_options.persistentLocale && 'server' in _options.persistentLocale){
-			_options.persistentLocale = _options.persistentLocale.server;
-		}
-		const contentLocale = await getContentLocale(locales, _options);
+			locale,
+		});
 		return createScopedT<FirstLocale, ScopePath>(contentLocale, scope);
 	};
 
 	return {
 		getI18n,
 		getScopedI18n,
-		initLocale: (locale: keyof Locales) => {
-			localeOptions.locale = locale;
+		initLocale: (_locale: keyof Locales) => {
+			locale = _locale;
 		},
 	};
 }

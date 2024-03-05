@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { createI18n } from "../src/create";
+import { createI18n } from "../src";
 
 describe("create-i18n-server", () => {
 	const {

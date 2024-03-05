@@ -10,7 +10,7 @@ import type {
 import {
 	retrieveScopeValueAtPath,
 	retrieveValueAtPath,
-} from "../functions/flatten-object";
+} from "./flatten-object";
 
 
 export function createT<
