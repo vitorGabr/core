@@ -5,10 +5,11 @@ import {
 	QueryClientProvider,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
+import { getContentLocale } from "../../functions/get-content-locale";
 
 export type LocaleContextType<T extends Record<string, unknown>> = {
 	dictionary: Record<string, unknown>;
-	locale: keyof T | string;
+	locale: string;
 	updateLocale: (locale: keyof T) => void;
 };
 
@@ -27,38 +28,33 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		children,
 		locale,
 	}: {
-		locale?: keyof Locales;
+		locale?: string;
 		children: React.ReactNode;
 	}) {
-		const [currentLocale, setCurrentLocale] = useState<
-			keyof Locales | undefined
-		>(locale);
-
-		const fetchLocale = async (_locale: keyof Locales | null | undefined) => {
-			if (!Object.keys(locales).includes(_locale as string)) {
-				return (await locales[options.defaultLocale]).default;
-			}
-			return (await locales[_locale as string]).default;
-		};
+		const [currentLocale, setCurrentLocale] = useState(locale);
 
 		const { data } = useSuspenseQuery({
 			queryKey: [QUERY_KEY, { currentLocale }],
 			queryFn: async () => {
-				const locale = currentLocale || (await options.persistentLocale?.get?.());
-				return fetchLocale(locale);
+				const locale =
+					currentLocale || (await options.persistentLocale?.get?.());
+				return await getContentLocale(locales, {
+					...options,
+					locale,
+				});
 			},
 		});
 
 		const updateLocale = async (newLocale: keyof Locales) => {
 			options.persistentLocale?.set?.(newLocale as string);
-			setCurrentLocale(newLocale);
+			setCurrentLocale(newLocale as string);
 		};
 
 		return (
 			<I18nContext.Provider
 				value={{
 					dictionary: data || {},
-					locale: currentLocale || options.defaultLocale,
+					locale: (currentLocale || options.defaultLocale) as string,
 					updateLocale: (newLocale: keyof Locales) => updateLocale(newLocale),
 				}}
 			>
@@ -68,7 +64,7 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 	}
 
 	return function WrappedLocaleProvider(props: {
-		locale?: keyof Locales;
+		locale?: string;
 		children: React.ReactNode;
 	}) {
 		const queryClient = new QueryClient();

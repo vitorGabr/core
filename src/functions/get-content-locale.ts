@@ -24,7 +24,6 @@ export const getContentLocale = async <Locales extends ImportedLocales>(
 	}
 
 	if (!(locale in locales)) {
-		console.warn(`O locale '${locale}' não está disponível. Usando o locale padrão.`);
 		locale = contentLocale.defaultLocale;
 	}
 

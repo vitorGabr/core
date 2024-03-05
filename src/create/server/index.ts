@@ -36,8 +36,8 @@ export function createServerI18n<
 	return {
 		getI18n,
 		getScopedI18n,
-		initLocale: (_locale: keyof Locales) => {
-			locale = _locale as string | null;
+		initLocale: (newLocale: string) => {
+			locale = newLocale;
 		},
 	};
 }
