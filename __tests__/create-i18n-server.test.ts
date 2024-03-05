@@ -29,7 +29,6 @@ describe("create-i18n-server", () => {
 
 	test("it show path when not found", async () => {
 		const t = await getScopedI18n("globals.usert_types");
-		// @ts-expect-error - testing purpose
 		expect(t("notfound")).toBe("globals.usert_types.notfound");
 	});
 });
