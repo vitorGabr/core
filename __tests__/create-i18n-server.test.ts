@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { createI18n } from "../src";
+import { createServerI18n } from "../src/create/server";
 
 describe("create-i18n-server", () => {
 	const {
-		server: { getI18n,getScopedI18n },
-	} = createI18n(
+		getI18n,getScopedI18n,
+	} = createServerI18n(
 		{
 			"pt-BR": import("./utils/pt-br"),
 			"en-US": import("./utils/en"),
@@ -29,6 +29,7 @@ describe("create-i18n-server", () => {
 
 	test("it show path when not found", async () => {
 		const t = await getScopedI18n("globals.usert_types");
+		// @ts-expect-error - testing purpose
 		expect(t("notfound")).toBe("globals.usert_types.notfound");
 	});
 });

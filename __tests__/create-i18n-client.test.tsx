@@ -1,11 +1,11 @@
 import { describe, expect, test } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { createI18n } from "../src";
+import { createClientI18n } from "../src/create/client";
 
 describe("create-i18n-client", () => {
 	const {
-		client: { useI18n,useScopedI18n,useChangeLocale, Provider },
-	} = createI18n(
+		useI18n,useScopedI18n,useChangeLocale, I18nProvider: Provider,
+	} = createClientI18n(
 		{
 			"pt-BR": import("./utils/pt-br"),
 			"en-US": import("./utils/en"),

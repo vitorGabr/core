@@ -9,7 +9,7 @@ import { createContext } from "react";
 import { createI18nProvider, type LocaleContextType } from "./create-i18n-provider";
 import { useLocaleContext } from "./use-locale-contex";
 
-export function client<
+export function createClientI18n<
 	Locales extends ImportedLocales,
 	FirstLocale extends Locale<Locales[keyof Locales]>,
 >(locales: Locales, options: LocaleOptions<Locales>) {
@@ -24,7 +24,7 @@ export function client<
 		const { dictionary } = useLocaleContext(LocaleContext);
 		return createScopedT<FirstLocale, ScopePath>(dictionary, scope);
 	};
-	const Provider = createI18nProvider({
+	const I18nProvider = createI18nProvider({
 		locales,
 		options,
 		I18nContext: LocaleContext,
@@ -37,7 +37,7 @@ export function client<
 	return {
 		useI18n,
 		useScopedI18n,
-		Provider,
+		I18nProvider,
 		useChangeLocale
 	};
 }
