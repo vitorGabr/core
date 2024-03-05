@@ -1,11 +1,11 @@
 import { Suspense, useState } from "react";
-import type { ImportedLocales, LocaleOptions } from "../../types/i18n";
+import type { ImportedLocales, LocaleOptions } from "../../types/create";
 import {
 	QueryClient,
 	QueryClientProvider,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import { getContentLocale } from "../../functions/get-content-locale";
+import { getContentLocale } from "../../helpers";
 
 export type LocaleContextType<T extends Record<string, unknown>> = {
 	dictionary: Record<string, unknown>;

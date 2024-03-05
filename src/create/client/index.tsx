@@ -4,10 +4,10 @@ import type {
 	Locale,
 	LocaleOptions,
 } from "../../types";
-import { createT, createScopedT } from "../../functions/create-i18n";
 import { createContext } from "react";
 import { createI18nProvider, type LocaleContextType } from "./create-i18n-provider";
 import { useLocaleContext } from "./use-locale-contex";
+import { createScopedT,createT } from "../../common";
 
 export function createClientI18n<
 	Locales extends ImportedLocales,

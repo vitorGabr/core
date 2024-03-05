@@ -4,8 +4,8 @@ import type {
 	Locale,
 	LocaleOptions,
 } from "../../types";
-import { createT, createScopedT } from "../../functions/create-i18n";
-import { getContentLocale } from "../../functions/get-content-locale";
+import { getContentLocale } from "../../helpers";
+import { createScopedT,createT } from "../../common";
 
 export function createServerI18n<
 	Locales extends ImportedLocales,
