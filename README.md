@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ik.imagekit.io/91phxemhf/logo-white.svg?updatedAt=1709408488312" />
-    <source media="(prefers-color-scheme: light)" srcset="https://ik.imagekit.io/91phxemhf/logo-black.svg?updatedAt=1709408488564" />
+    <source media="(prefers-color-scheme: light)" srcset="https://ik.imagekit.io/91phxemhf/logo-white.svg?updatedAt=1709408488312" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://ik.imagekit.io/91phxemhf/logo-black.svg?updatedAt=1709408488564" />
     <img alt="" height="100px" src="https://ik.imagekit.io/91phxemhf/logo-white.svg?updatedAt=1709408488312" />
   </picture>
 </p>
@@ -47,7 +47,7 @@ const {
     setLocale
 } = createServerI18n(locales, {
     defaultLocale: "pt-BR",
-    storedLocale: {
+    persistentLocale: {
         get: () => cookies().get("locale").value,
     },
 });
