@@ -2,7 +2,7 @@ import type {
 	DeepKeyStringUnion,
 	DeepKeyUnion,
 	FlattenedValueByPath,
-} from "../types/flatten-types";
+} from "../types";
 
 
 export function createT<

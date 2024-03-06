@@ -3,6 +3,9 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { createClientI18n } from "../src/create/client";
 
 describe("create-i18n-client", () => {
+
+	let locale = "pt-BR";
+
 	const {
 		useI18n,
 		useScopedI18n,
@@ -16,8 +19,10 @@ describe("create-i18n-client", () => {
 		{
 			defaultLocale: "pt-BR",
 			persistentLocale: {
-				get: () => "pt-BR",
-				set: () => Promise.resolve(),
+				get: () => locale,
+				set: async (newL) => {
+					locale = newL;
+				},
 			},
 		},
 	);
