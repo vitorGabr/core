@@ -4,7 +4,10 @@ import { createClientI18n } from "../src/create/client";
 
 describe("create-i18n-client", () => {
 	const {
-		useI18n,useScopedI18n,useChangeLocale, I18nProvider: Provider,
+		useI18n,
+		useScopedI18n,
+		useChangeLocale,
+		I18nProvider: Provider,
 	} = createClientI18n(
 		{
 			"pt-BR": () => import("./utils/pt-br"),
@@ -48,7 +51,7 @@ describe("create-i18n-client", () => {
 				wrapper: Provider,
 			},
 		);
-		
+
 		await waitFor(() => {
 			// @ts-ignore
 			expect(i18nResult.current.i18n("notfound")).toBe("notfound");
@@ -56,8 +59,8 @@ describe("create-i18n-client", () => {
 
 		act(() => {
 			// @ts-ignore
-			i18nResult.current.changeLocale('en-USa')
-		})
+			i18nResult.current.changeLocale("en-USa");
+		});
 
 		await waitFor(() => {
 			// @ts-ignore

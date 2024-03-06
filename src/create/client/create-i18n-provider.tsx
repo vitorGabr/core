@@ -1,5 +1,9 @@
 import { Suspense, useState } from "react";
-import type { ImportedLocales, LocaleOptions } from "../../types/create";
+import type {
+	ImportedLocales,
+	Locale,
+	LocaleOptions,
+} from "../../types/create";
 import {
 	QueryClient,
 	QueryClientProvider,
@@ -7,10 +11,9 @@ import {
 } from "@tanstack/react-query";
 import { getContentLocale } from "../../helpers";
 
-export type LocaleContextType<T extends Record<string, unknown>> = {
-	dictionary: Record<string, unknown>;
-	locale: string;
-	updateLocale: (locale: keyof T) => void;
+export type LocaleContextType<Locales extends ImportedLocales> = {
+	dictionary: Locale<Locales[keyof Locales]>;
+	updateLocale: (locale: Extract<keyof Locales, string>) => void;
 };
 
 const QUERY_KEY = "locale";
@@ -33,29 +36,26 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 	}) {
 		const [currentLocale, setCurrentLocale] = useState(locale);
 
-		const { data } = useSuspenseQuery({
+		const { data: dictionary } = useSuspenseQuery({
 			queryKey: [QUERY_KEY, { currentLocale }],
-			queryFn: async () => {
-				const locale =
-					currentLocale || (await options.persistentLocale?.get?.());
-				return await getContentLocale(locales, {
+			queryFn: () => {
+				return getContentLocale(locales, {
 					...options,
-					locale,
+					locale: currentLocale,
 				});
 			},
 		});
 
-		const updateLocale = async (newLocale: keyof Locales) => {
-			options.persistentLocale?.set?.(newLocale as string);
-			setCurrentLocale(newLocale as string);
+		const updateLocale = async (newLocale: Extract<keyof Locales, string>) => {
+			options.persistentLocale?.set?.(newLocale);
+			setCurrentLocale(newLocale);
 		};
 
 		return (
 			<I18nContext.Provider
 				value={{
-					dictionary: data || {},
-					locale: (currentLocale || options.defaultLocale) as string,
-					updateLocale: (newLocale: keyof Locales) => updateLocale(newLocale),
+					dictionary,
+					updateLocale,
 				}}
 			>
 				{children}

@@ -1,4 +1,4 @@
-import type { ImportedLocales, LocaleOptions } from "../types/create";
+import type { ImportedLocales, Locale, LocaleOptions } from "../types/create";
 
 export const getContentLocale = async <Locales extends ImportedLocales>(
 	locales: Locales,
@@ -16,7 +16,7 @@ export const getContentLocale = async <Locales extends ImportedLocales>(
 			locale = storedLocale;
 		} else if (storedLocale instanceof Promise) {
 			try {
-				locale = await storedLocale ?? "";
+				locale = (await storedLocale) ?? "";
 			} catch (error) {
 				console.error("Erro ao obter locale da promessa:", error);
 			}
@@ -27,5 +27,5 @@ export const getContentLocale = async <Locales extends ImportedLocales>(
 		locale = contentLocale.defaultLocale;
 	}
 
-	return (await locales[locale]()).default;
+	return (await locales[locale]()).default as Locale<Locales[keyof Locales]>;
 };

@@ -1,2 +1,2 @@
-export {createScopedT} from './create-scoped';
-export {createT} from './create-t';
+export {getScopedT} from './get-scoped';
+export {getT} from './get-t';

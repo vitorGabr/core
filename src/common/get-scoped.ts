@@ -6,12 +6,12 @@ import type {
 	NestedValueByPath,
 	StringParameters,
 } from "../types";
-import { retrieveScopeValueAtPath } from "../helpers/flatten-object";
+import { createT } from "../helpers";
 
-export function createScopedT<
+export function getScopedT<
 	CurrentLocale extends Locale<ImportedLocales[keyof ImportedLocales]>,
 	ScopePath extends DeepKeyUnion<CurrentLocale>,
->(contentLocale: Record<string, unknown>, scope: ScopePath) {
+>(contentLocale: CurrentLocale, scope: ScopePath) {
 	return <
 		ScopedKey extends FlattenedValueByPath<CurrentLocale, ScopePath>,
 		ScopedValue extends NestedValueByPath<CurrentLocale, ScopedKey>,
@@ -22,9 +22,8 @@ export function createScopedT<
 		key: ScopedKey,
 		params?: Parameters,
 	) => {
-		// Retrieve scoped value at the specified path in the content
-		return retrieveScopeValueAtPath({
-			obj: contentLocale as CurrentLocale,
+		return createT({
+			obj: contentLocale,
 			scope,
 			path: key,
 			params,

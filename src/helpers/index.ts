@@ -1,2 +1,2 @@
-export {retrieveScopeValueAtPath,retrieveValueAtPath} from './flatten-object';
+export {createT} from './create-t';
 export {getContentLocale} from './get-content-locale';

@@ -5,7 +5,7 @@ import type {
 	LocaleOptions,
 } from "../../types";
 import { getContentLocale } from "../../helpers";
-import { createScopedT,createT } from "../../common";
+import { getScopedT,getT } from "../../common";
 
 export function createServerI18n<
 	Locales extends ImportedLocales,
@@ -21,7 +21,7 @@ export function createServerI18n<
 			...options,
 			locale,
 		});
-		return createT<FirstLocale>(contentLocale);
+		return getT<FirstLocale>(contentLocale);
 	};
 	const getScopedI18n = async <ScopePath extends ScopedLocale>(
 		scope: ScopePath,
@@ -30,7 +30,7 @@ export function createServerI18n<
 			...options,
 			locale,
 		});
-		return createScopedT<FirstLocale, ScopePath>(contentLocale, scope);
+		return getScopedT<FirstLocale, ScopePath>(contentLocale, scope);
 	};
 
 	return {

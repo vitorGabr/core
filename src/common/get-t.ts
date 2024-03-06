@@ -5,14 +5,11 @@ import type {
 	NestedValueByPath,
 	StringParameters,
 } from "../types";
-import {
-	retrieveValueAtPath,
-} from "../helpers/flatten-object";
+import { createT } from "../helpers";
 
-export function createT<
+export function getT<
 	CurrentLocale extends Locale<ImportedLocales[keyof ImportedLocales]>,
->(contentLocale: Record<string, unknown>) {
-
+>(contentLocale: CurrentLocale) {
 	return <
 		LocaleKey extends DeepKeyStringUnion<CurrentLocale>,
 		LocaleValue extends NestedValueByPath<CurrentLocale, LocaleKey>,
@@ -23,7 +20,7 @@ export function createT<
 		key: LocaleKey,
 		params?: Parameters,
 	) => {
-		return retrieveValueAtPath({
+		return createT({
 			obj: contentLocale,
 			path: key,
 			params,
