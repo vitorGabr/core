@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import type {
 	ImportedLocales,
 	Locale,
@@ -7,6 +7,7 @@ import type {
 import {
 	QueryClient,
 	QueryClientProvider,
+	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { getContentLocale } from "../../helpers";
@@ -29,26 +30,24 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 }) {
 	function LocaleProvider({
 		children,
-		locale,
 	}: {
-		locale?: string;
 		children: React.ReactNode;
 	}) {
-		const [currentLocale, setCurrentLocale] = useState(locale);
-
+		const queryClient = useQueryClient();
 		const { data: dictionary } = useSuspenseQuery({
-			queryKey: [QUERY_KEY, { currentLocale }],
+			queryKey: [QUERY_KEY],
 			queryFn: () => {
 				return getContentLocale(locales, {
 					...options,
-					locale: currentLocale,
 				});
 			},
 		});
 
-		const updateLocale = async (newLocale: Extract<keyof Locales, string>) => {
+		const updateLocale = (newLocale: Extract<keyof Locales, string>) => {
 			options.persistentLocale?.set?.(newLocale);
-			setCurrentLocale(newLocale);
+			queryClient.invalidateQueries({
+				queryKey: [QUERY_KEY],
+			});
 		};
 
 		return (
@@ -64,7 +63,6 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 	}
 
 	return function WrappedLocaleProvider(props: {
-		locale?: string;
 		children: React.ReactNode;
 	}) {
 		const queryClient = new QueryClient();
