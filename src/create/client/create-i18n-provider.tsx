@@ -1,4 +1,4 @@
-import { type Context,Suspense, useContext } from "react";
+import { type Context, Suspense, useContext } from "react";
 import type { ImportedLocales, Locale, LocaleOptions } from "../../types";
 import { getContentLocale } from "../../helpers";
 import useSWR from "swr";
@@ -7,8 +7,6 @@ type LocaleContextType<Locales extends ImportedLocales> = {
 	dictionary: Locale<Locales[keyof Locales]>;
 	updateLocale: (locale: Extract<keyof Locales, string>) => void;
 };
-
-const QUERY_KEY = "locale";
 
 function createI18nProvider<Locales extends ImportedLocales>({
 	locales,
@@ -19,22 +17,15 @@ function createI18nProvider<Locales extends ImportedLocales>({
 	options: LocaleOptions<Locales>;
 	I18nContext: React.Context<LocaleContextType<Locales> | null>;
 }) {
+	const fetcher = () => getContentLocale(locales, options);
 	function LocaleProvider({
 		children,
 	}: {
 		children: React.ReactNode;
 	}) {
-		const { data: dictionary, mutate } = useSWR(
-			QUERY_KEY,
-			() => {
-				return getContentLocale(locales, {
-					...options,
-				});
-			},
-			{
-				suspense: true,
-			},
-		);
+		const { data: dictionary, mutate } = useSWR("locale", fetcher, {
+			suspense: true,
+		});
 
 		const updateLocale = (newLocale: Extract<keyof Locales, string>) => {
 			options.persistentLocale?.set?.(newLocale);
@@ -67,17 +58,10 @@ function createI18nProvider<Locales extends ImportedLocales>({
 function useLocaleContext<Locales extends ImportedLocales>(
 	Context: Context<LocaleContextType<Locales> | null>,
 ) {
-    const context = useContext(Context);
+	const context = useContext(Context);
+	if (!context) throw new Error("Error");
 
-    if (!context) {
-      throw new Error('Error');
-    }
-
-    return context;
+	return context;
 }
 
-export {
-	createI18nProvider,
-	useLocaleContext,
-	type LocaleContextType,
-};
+export { createI18nProvider, useLocaleContext, type LocaleContextType };
