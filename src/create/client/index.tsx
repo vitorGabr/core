@@ -5,9 +5,12 @@ import type {
 	LocaleOptions,
 } from "../../types";
 import { createContext } from "react";
-import { createI18nProvider, type LocaleContextType } from "./create-i18n-provider";
-import { useLocaleContext } from "./use-locale-contex";
-import { getScopedT,getT } from "../../common";
+import {
+	createI18nProvider,
+	useLocaleContext,
+	type LocaleContextType,
+} from "./create-i18n-provider";
+import { getScopedT, getT } from "../../common";
 
 export function createClientI18n<
 	Locales extends ImportedLocales,
@@ -38,6 +41,6 @@ export function createClientI18n<
 		useI18n,
 		useScopedI18n,
 		I18nProvider,
-		useChangeLocale
+		useChangeLocale,
 	};
 }

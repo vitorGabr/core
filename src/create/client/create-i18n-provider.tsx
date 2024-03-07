@@ -1,16 +1,16 @@
-import { Suspense } from "react";
+import { type Context,Suspense, useContext } from "react";
 import type { ImportedLocales, Locale, LocaleOptions } from "../../types";
 import { getContentLocale } from "../../helpers";
-import useSWR, { SWRConfig } from "swr";
+import useSWR from "swr";
 
-export type LocaleContextType<Locales extends ImportedLocales> = {
+type LocaleContextType<Locales extends ImportedLocales> = {
 	dictionary: Locale<Locales[keyof Locales]>;
 	updateLocale: (locale: Extract<keyof Locales, string>) => void;
 };
 
 const QUERY_KEY = "locale";
 
-export function createI18nProvider<Locales extends ImportedLocales>({
+function createI18nProvider<Locales extends ImportedLocales>({
 	locales,
 	options,
 	I18nContext,
@@ -57,11 +57,27 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 	}) {
 		return (
-			<SWRConfig>
-				<Suspense fallback={null}>
-					<LocaleProvider {...props} />
-				</Suspense>
-			</SWRConfig>
+			<Suspense fallback={null}>
+				<LocaleProvider {...props} />
+			</Suspense>
 		);
 	};
 }
+
+function useLocaleContext<Locales extends ImportedLocales>(
+	Context: Context<LocaleContextType<Locales> | null>,
+) {
+    const context = useContext(Context);
+
+    if (!context) {
+      throw new Error('Error');
+    }
+
+    return context;
+}
+
+export {
+	createI18nProvider,
+	useLocaleContext,
+	type LocaleContextType,
+};
