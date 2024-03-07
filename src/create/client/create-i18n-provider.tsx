@@ -24,12 +24,13 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 	}: {
 		children: React.ReactNode;
 	}) {
-		const { data: dictionary,mutate } = useSWR(
+		const { data: dictionary, mutate } = useSWR(
 			QUERY_KEY,
-			() =>
-				getContentLocale(locales, {
+			() => {
+				return getContentLocale(locales, {
 					...options,
-				}),
+				});
+			},
 			{
 				suspense: true,
 			},
