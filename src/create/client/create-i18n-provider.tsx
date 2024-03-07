@@ -1,9 +1,5 @@
-import { Suspense, useState } from "react";
-import type {
-	ImportedLocales,
-	Locale,
-	LocaleOptions,
-} from "../../types";
+import { Suspense } from "react";
+import type { ImportedLocales, Locale, LocaleOptions } from "../../types";
 import {
 	QueryClient,
 	QueryClientProvider,
@@ -33,15 +29,13 @@ export function createI18nProvider<Locales extends ImportedLocales>({
 	}: {
 		children: React.ReactNode;
 	}) {
-
 		const queryClient = useQueryClient();
 		const { data: dictionary } = useSuspenseQuery({
 			queryKey: [QUERY_KEY],
-			queryFn: () => {
-				return getContentLocale(locales, {
+			queryFn: () =>
+				getContentLocale(locales, {
 					...options,
-				});
-			},
+				}),
 		});
 
 		const updateLocale = (newLocale: Extract<keyof Locales, string>) => {

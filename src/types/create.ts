@@ -1,10 +1,12 @@
 type Nullable<T> = T | undefined | null;
 
-export type ImportedLocales = {
+export  type ImportedLocales = {
 	[key in string]: () => Promise<{
-		default: Record<string, unknown>
+		default: Record<string, unknown>;
 	}>;
-};
+}
+
+
 export type Locale<T extends ImportedLocales[keyof ImportedLocales]> =
 	T extends () => Promise<infer R>
 		? R extends { default: infer T }
