@@ -7,17 +7,14 @@ import type {
 } from "../../types";
 
 export const createDefaultI18n = <Locales extends ImportedLocales>(
-	locales: Locales,
+	_: Locales,
 ) => {
-	const firstLocaleKey = Object.keys(locales)[0] as keyof Locales;
-	type FirstLocaleType = Locale<Locales[typeof firstLocaleKey]>;
+	type CurrentLocale = Locale<Locales[keyof Locales]>;
 
 	return {
-		t: (key: DeepKeyStringUnion<FirstLocaleType>) => {
-			return key;
-		},
-		scopedT: <Scope extends DeepKeyUnion<FirstLocaleType>>(scope: Scope) => {
-			return (key: FlattenedValueByPath<FirstLocaleType, Scope>) => {
+		t: (key: DeepKeyStringUnion<CurrentLocale>) => key,
+		scopedT: <Scope extends DeepKeyUnion<CurrentLocale>>(scope: Scope) => {
+			return (key: FlattenedValueByPath<CurrentLocale, Scope>) => {
 				return `${scope}.${key}`;
 			};
 		},

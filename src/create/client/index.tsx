@@ -16,6 +16,7 @@ export function createClientI18n<
 	Locales extends ImportedLocales,
 	FirstLocale extends Locale<Locales[keyof Locales]>,
 >(locales: Locales, options: LocaleOptions<Locales>) {
+	
 	type ScopedLocale = DeepKeyUnion<FirstLocale>;
 	const LocaleContext = createContext<LocaleContextType<Locales> | null>(null);
 

@@ -11,6 +11,7 @@ export function createServerI18n<
 	Locales extends ImportedLocales,
 	FirstLocale extends Locale<Locales[keyof Locales]>,
 >(locales: Locales, options: LocaleOptions<Locales>) {
+	
 	type ScopedLocale = DeepKeyUnion<FirstLocale>;
 	const contentLocale = () => getContentLocale(locales, options);
 
