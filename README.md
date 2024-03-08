@@ -44,7 +44,6 @@ const locales = {
 const {
     getI18n,
     getScopedI18n,
-    setLocale
 } = createServerI18n(locales, {
     defaultLocale: "pt-BR",
     persistentLocale: {
