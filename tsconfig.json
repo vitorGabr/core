@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "target": "ES2018",
+    "target": "esnext",
+    "module": "esnext",
     "jsx": "react-jsx",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "noEmit": true
   }
 }
