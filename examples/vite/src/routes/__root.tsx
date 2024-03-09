@@ -1,5 +1,5 @@
 import { Link, Outlet, createRootRoute } from '@tanstack/react-router'
-import { I18nProvider } from '../locale/client'
+import { I18nProvider, useChangeLocale } from '../locale/client'
 
 export const Route = createRootRoute({
   component: RootComponent,

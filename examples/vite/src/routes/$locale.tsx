@@ -5,9 +5,9 @@ export const Route = createFileRoute('/$locale')({
   component: Home,
 })
 
+
+
 function Home() {
-  const params = useParams({ strict: false })
-  console.log(params)
   const t = useI18n();
 
   return (

@@ -9,8 +9,8 @@ dependencies:
     specifier: ^1.19.2
     version: 1.19.2(react-dom@18.2.0)(react@18.2.0)
   lingo-ts:
-    specifier: ^0.1.10
-    version: 0.1.10
+    specifier: ^0.1.12
+    version: 0.1.12
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1323,8 +1323,8 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /lingo-ts@0.1.10:
-    resolution: {integrity: sha512-5Te6j1aFRJndDb3/sgLF4Vh7u+PufjY0ZiL01raunVy1Mjq1Jw1eiVJ4nNzWm/0+GQQ+w2kkzptWnIxEZVdrsQ==}
+  /lingo-ts@0.1.12:
+    resolution: {integrity: sha512-xGJ18/MAuk792UYyiw2Gd3lPFtNknhlDkfAX/GHfx3ORvB+Mbc0tipNOXO/kh3bD/JebGkE/4H6IiWrwyamGrA==}
     dependencies:
       '@tanstack/react-query': 5.25.0(react@18.2.0)
       react: 18.2.0

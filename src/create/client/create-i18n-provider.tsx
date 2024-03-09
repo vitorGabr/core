@@ -1,4 +1,4 @@
-import { type Context, Suspense, useContext } from "react";
+import { type Context, Suspense, useContext, useState, useMemo } from "react";
 import type { ImportedLocales, Locale, LocaleOptions } from "../../types";
 import { getContentLocale } from "../../helpers";
 import {
@@ -28,14 +28,17 @@ function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 		locale?: string;
 	}) {
-		const currentLocale = locale || options.persistentLocale?.get?.();
+		const getOptionsLocale = options.persistentLocale?.get?.();
+		const currentLocale =
+			typeof getOptionsLocale === "string" ? getOptionsLocale : locale;
 
 		const { data: dictionary, refetch } = useSuspenseQuery({
 			queryKey: ["locale", currentLocale],
-			queryFn: () => getContentLocale(locales, {
-				...options,
-				locale,
-			}),
+			queryFn: () => {
+				return getContentLocale(locales, {
+					...options,
+				});
+			},
 		});
 
 		const updateLocale = (newLocale: Extract<keyof Locales, string>) => {
