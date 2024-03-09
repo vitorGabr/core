@@ -37,7 +37,7 @@ function createI18nProvider<Locales extends ImportedLocales>({
 			queryFn: () => {
 				return getContentLocale(locales, {
 					...options,
-					locale,
+					locale:currentLocale,
 				});
 			},
 		});
