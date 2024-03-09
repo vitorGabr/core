@@ -23,12 +23,14 @@ function createI18nProvider<Locales extends ImportedLocales>({
 }) {
 	function LocaleProvider({
 		children,
+		locale,
 	}: {
 		children: React.ReactNode;
+		locale?: string
 	}) {
 		const { data: dictionary, refetch } = useSuspenseQuery({
-			queryKey: ["locale"],
-			queryFn: () => getContentLocale(locales, options),
+			queryKey: ["locale",locale],
+			queryFn: () => getContentLocale(locales, {...options,locale}),
 		});
 
 		const updateLocale = (newLocale: Extract<keyof Locales, string>) => {
@@ -50,6 +52,7 @@ function createI18nProvider<Locales extends ImportedLocales>({
 
 	return function WrappedLocaleProvider(props: {
 		children: React.ReactNode;
+		locale?: string;
 	}) {
 		const queryClient = new QueryClient();
 		return (
