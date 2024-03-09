@@ -1,6 +1,5 @@
-import { createFileRoute, useParams } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useI18n } from '../locale/client'
-import { useEffect } from 'react';
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -8,8 +7,6 @@ export const Route = createFileRoute('/')({
 
 function Home() {
   const t = useI18n();
-  const params = useParams({ strict: false })
-console.log(params)
 
 
   return (

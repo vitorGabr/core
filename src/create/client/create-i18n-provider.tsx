@@ -28,7 +28,10 @@ function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 		locale?: string;
 	}) {
-		const useLocale = options.persistentLocale?.useLocale?.() ?? locale;
+		const useLocale =
+			options.persistentLocale && "useLocale" in options.persistentLocale
+				? options.persistentLocale.useLocale?.()
+				: locale;
 
 		const { data: dictionary, refetch } = useSuspenseQuery({
 			queryKey: ["locale", useLocale],

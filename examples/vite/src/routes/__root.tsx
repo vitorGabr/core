@@ -1,5 +1,5 @@
 import { Link, Outlet, createRootRoute } from '@tanstack/react-router'
-import { I18nProvider, useChangeLocale } from '../locale/client'
+import { I18nProvider } from '../locale/client'
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -19,7 +19,7 @@ function RootComponent() {
           }}
           activeOptions={{ exact: true }}
         >
-          Home
+          pt-br
         </Link>{' '}
         <Link
           to="/$locale"
@@ -29,7 +29,7 @@ function RootComponent() {
           }}
 
         >
-          This Route Does Not Exist
+          en
         </Link>
       </div>
       <hr />
