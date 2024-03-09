@@ -23,6 +23,7 @@ export type LocaleOptions<
 	locale?: string | null;
 	defaultLocale: Extract<K, string>;
 	persistentLocale?: {
+		useLocale?: () => Nullable<string>;
 		get?: () => Nullable<string | Promise<Nullable<string>>>;
 		set?: (locale: string) => Promise<void>;
 	};

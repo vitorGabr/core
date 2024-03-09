@@ -28,16 +28,14 @@ function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 		locale?: string;
 	}) {
-		const getOptionsLocale = options.persistentLocale?.get?.();
-		const currentLocale =
-			typeof getOptionsLocale === "string" ? getOptionsLocale : locale;
+		const useLocale = options.persistentLocale?.useLocale?.() ?? locale;
 
 		const { data: dictionary, refetch } = useSuspenseQuery({
-			queryKey: ["locale", currentLocale],
+			queryKey: ["locale", useLocale],
 			queryFn: () => {
 				return getContentLocale(locales, {
 					...options,
-					locale:currentLocale,
+					locale: useLocale,
 				});
 			},
 		});

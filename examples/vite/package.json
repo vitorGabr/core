@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-router": "^1.19.2",
-    "lingo-ts": "^0.1.13",
+    "lingo-ts": "^0.1.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
