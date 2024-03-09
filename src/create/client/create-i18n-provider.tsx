@@ -1,4 +1,4 @@
-import { type Context, Suspense, useContext, useState, useMemo } from "react";
+import { type Context, Suspense, useContext } from "react";
 import type { ImportedLocales, Locale, LocaleOptions } from "../../types";
 import { getContentLocale } from "../../helpers";
 import {
