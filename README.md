@@ -32,7 +32,7 @@ yarn add lingo-ts
 ### Para Next.js com Componentes de Servidor:
 
 ```jsx
-import { createServerI18n } from "lingo-ts/server";
+import { createServerI18n } from "lingo-ts";
 
 // Defina seus locais
 const locales = {
@@ -56,7 +56,7 @@ const {
 ### Para React ou React Native:
 
 ```jsx
-import { createClientI18n } from "lingo-ts/client";
+import { createClientI18n } from "lingo-ts";
 import { getCookie, setCookie } from "./cookies";
 
 // Defina seus locais
