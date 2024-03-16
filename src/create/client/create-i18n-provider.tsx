@@ -1,11 +1,13 @@
-import { type Context, Suspense, useContext } from "react";
+import {
+	type Context,
+	Suspense,
+	useContext,
+	//@ts-ignore
+	use,
+	useState
+} from "react";
 import type { ImportedLocales, Locale, LocaleOptions } from "../../types";
 import { getContentLocale } from "../../helpers";
-import {
-	QueryClient,
-	QueryClientProvider,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
 
 type LocaleContextType<Locales extends ImportedLocales> = {
 	dictionary: Locale<Locales[keyof Locales]>;
@@ -28,24 +30,21 @@ function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 		locale?: string;
 	}) {
+		const [currentLocale, setCurrentLocale] = useState<string | null>(null);
 		const useLocale =
 			options.persistentLocale && "useLocale" in options.persistentLocale
 				? options.persistentLocale.useLocale?.()
 				: locale;
 
-		const { data: dictionary, refetch } = useSuspenseQuery({
-			queryKey: ["locale", useLocale],
-			queryFn: () => {
-				return getContentLocale(locales, {
-					...options,
-					locale: useLocale,
-				});
-			},
-		});
+		const dictionary = use(getContentLocale(locales, {
+			...options,
+			locale: currentLocale ?? useLocale,
+		}))
+
 
 		const updateLocale = (newLocale: Extract<keyof Locales, string>) => {
 			options.persistentLocale?.set?.(newLocale);
-			refetch();
+			setCurrentLocale(newLocale);
 		};
 
 		return (
@@ -64,13 +63,10 @@ function createI18nProvider<Locales extends ImportedLocales>({
 		children: React.ReactNode;
 		locale?: string;
 	}) {
-		const queryClient = new QueryClient();
 		return (
-			<QueryClientProvider client={queryClient}>
-				<Suspense fallback={null}>
-					<LocaleProvider {...props} />
-				</Suspense>
-			</QueryClientProvider>
+			<Suspense fallback={null}>
+				<LocaleProvider {...props} />
+			</Suspense>
 		);
 	};
 }

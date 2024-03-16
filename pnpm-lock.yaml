@@ -7,10 +7,10 @@ settings:
 dependencies:
   '@tanstack/react-query':
     specifier: ^5.25.0
-    version: 5.25.0(react@18.2.0)
+    version: 5.25.0(react@18.3.0-canary-a870b2d54-20240314)
   react:
-    specifier: ^18
-    version: 18.2.0
+    specifier: 18.3.0-canary-a870b2d54-20240314
+    version: 18.3.0-canary-a870b2d54-20240314
 
 devDependencies:
   '@biomejs/biome':
@@ -18,7 +18,7 @@ devDependencies:
     version: 1.5.3
   '@testing-library/react':
     specifier: ^14.2.1
-    version: 14.2.1(react-dom@18.2.0)(react@18.2.0)
+    version: 14.2.1(react-dom@18.2.0)(react@18.3.0-canary-a870b2d54-20240314)
   '@types/react':
     specifier: ^18
     version: 18.2.61
@@ -910,13 +910,13 @@ packages:
     resolution: {integrity: sha512-vlobHP64HTuSE68lWF1mEhwSRC5Q7gaT+a/m9S+ItuN+ruSOxe1rFnR9j0ACWQ314BPhBEVKfBQ6mHL0OWfdbQ==}
     dev: false
 
-  /@tanstack/react-query@5.25.0(react@18.2.0):
+  /@tanstack/react-query@5.25.0(react@18.3.0-canary-a870b2d54-20240314):
     resolution: {integrity: sha512-u+n5R7mLO7RmeiIonpaCRVXNRWtZEef/aVZ/XGWRPa7trBIvGtzlfo0Ah7ZtnTYfrKEVwnZ/tzRCBcoiqJ/tFw==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
       '@tanstack/query-core': 5.25.0
-      react: 18.2.0
+      react: 18.3.0-canary-a870b2d54-20240314
     dev: false
 
   /@testing-library/dom@9.3.4:
@@ -933,7 +933,7 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react@14.2.1(react-dom@18.2.0)(react@18.2.0):
+  /@testing-library/react@14.2.1(react-dom@18.2.0)(react@18.3.0-canary-a870b2d54-20240314):
     resolution: {integrity: sha512-sGdjws32ai5TLerhvzThYFbpnF9XtL65Cjf+gB0Dhr29BGqK+mAeN7SURSdu+eqgET4ANcWoC7FQpkaiGvBr+A==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -943,8 +943,8 @@ packages:
       '@babel/runtime': 7.24.0
       '@testing-library/dom': 9.3.4
       '@types/react-dom': 18.2.19
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
+      react: 18.3.0-canary-a870b2d54-20240314
+      react-dom: 18.2.0(react@18.3.0-canary-a870b2d54-20240314)
     dev: true
 
   /@tootallnate/quickjs-emscripten@0.23.0:
@@ -2793,6 +2793,7 @@ packages:
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+    dev: true
 
   /js-tokens@8.0.3:
     resolution: {integrity: sha512-UfJMcSJc+SEXEl9lH/VLHSZbThQyLpw1vLO1Lb+j4RWDvG3N2f7yj3PVQA3cmkTBNldJ9eFnM+xEXxHIXrYiJw==}
@@ -2961,6 +2962,7 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+    dev: true
 
   /loupe@2.3.7:
     resolution: {integrity: sha512-zSMINGVYkdpYSOBmLi0D1Uo7JU9nVdQKrHxC8eYlV+9YKK9WePqAlL7lSlorG/U2Fw1w0hTBmaa/jrQ3UbPHtA==}
@@ -3554,13 +3556,13 @@ packages:
       strip-json-comments: 2.0.1
     dev: true
 
-  /react-dom@18.2.0(react@18.2.0):
+  /react-dom@18.2.0(react@18.3.0-canary-a870b2d54-20240314):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
       loose-envify: 1.4.0
-      react: 18.2.0
+      react: 18.3.0-canary-a870b2d54-20240314
       scheduler: 0.23.0
     dev: true
 
@@ -3577,11 +3579,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react@18.2.0:
-    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+  /react@18.3.0-canary-a870b2d54-20240314:
+    resolution: {integrity: sha512-/sjBAVN6TJ1G+Ia3hGMaLGZE3w/OKtO6FEzz/wBUKdmK3obyJvxK0FmHGVPpM9nDzrw5f1WJDoPE8nGgkvpKog==}
     engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
 
   /readable-stream@3.6.2:
     resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}
