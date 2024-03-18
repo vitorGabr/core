@@ -31,6 +31,7 @@ describe("create-i18n-client", () => {
 		const { result } = renderHook(() => useI18n(), {
 			wrapper: Provider,
 		});
+
 		await waitFor(() => {
 			expect(result.current("globals.usert_types.admin")).toBe("Admin");
 		});
