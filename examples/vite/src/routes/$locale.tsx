@@ -10,10 +10,9 @@ function Home() {
   const t = useI18n();
 
 
-
   return (
     <div>
-      <h3>{t('world')}</h3>
+      <h3>{t('hello')}</h3>
     </div>
   )
 }
